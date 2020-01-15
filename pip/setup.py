@@ -2,10 +2,12 @@ import os
 import sys
 import struct
 import platform
+import sysconfig
 import subprocess
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
+from distutils import sysconfig
 from shutil import copyfile
 
 class HelicsExtension(Extension):
@@ -41,7 +43,15 @@ class HelicsBuild(build_ext):
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON',
                       # For using the new Python find in CMake should set Python3_ROOT_DIR to os.path.split(os.path.dirname(os.path.abspath(sys.executable)))[0]
-                      '-DPYTHON_EXECUTABLE=' + sys.executable,
+                      # It actually might be way more annoying than that... possibly need to set all variables manually for the Python executable/libraries/include paths
+                      '-DHELICS_USE_NEW_PYTHON_FIND=ON',
+                      '-DPython3_EXECUTABLE=' + sys.executable,
+                      '-DPython3_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
+                      '-DPython3_LIBRARY_RELEASE=/',
+                      '-DPython3_LIBRARY_DEBUG=/',
+                      #'-DPYTHON_EXECUTABLE=' + sys.executable,
+                      #'-DPYTHON_LIBRARY=' + os.path.join(sysconfig.get_python_lib(plat_specific=True, standard_lib=True)),
+                      #'-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
                      ]
 
         # Use SWIG if it is available
