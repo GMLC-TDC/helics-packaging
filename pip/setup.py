@@ -91,7 +91,7 @@ setup(
     keywords='co-simulation',
     description='Hierarchical Engine for Large-scale Infrastructure Co-Simulation (HELICS)',
     long_description='',
-    ext_modules=[HelicsExtension('cmake_example', sourcedir='src/interfaces/python')],
+    ext_modules=[HelicsExtension('cmake_example', sourcedir='bundled/helics/interfaces/python')],
     cmdclass=dict(build_ext=HelicsBuild),
     entry_points={
         'console_scripts': [
