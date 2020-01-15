@@ -61,6 +61,8 @@ class HelicsBuild(build_ext):
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(bldcfg.upper(), extdir)]
             if struct.calcsize('P') == 8:
                 cmake_args += ['-A', 'x64']
+            else:
+                cmake_args += ['-A', 'Win32']
         else:
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + bldcfg]
 
