@@ -1,0 +1,38 @@
+name: Build Python Packages
+
+on:
+  release:
+    types: [created]
+  push:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container: quay.io/pypa/manylinux2010_x86_64
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install dependencies
+      run: |
+        curl -O -L https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz
+        tar xvzf cmake-*.tar.gz && rm cmake-*.tar.gz
+        export CMAKE_CMD=cmake-*/bin/cmake
+        ${CMAKE_CMD} --version
+        ls /opt/python/
+        ls /opt/python/cp37-cp37m
+        # Install HELICS shared library for Linux
+        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-Linux-x86_64.tar.gz
+        tar xvzf Helics-*.tar.gz && rm Helics-*.tar.gz
+        export CMAKE_PREFIX_PATH=Helics-*
+        echo ${CMAKE_PREFIX_PATH}
+        # Checkout the HELICS source tree into the pip folder
+        git clone -b develop --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+        ls pip/bundled
+        #python -m pip install --upgrade pip
+        #pip install setuptools wheel twine
+#    - name: Publish to PyPI
+#      env:
+#        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+#        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+#      run: |
+#        python setup.py sdist bdist_wheel
+#        twine upload dist/*
