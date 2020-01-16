@@ -39,6 +39,37 @@ jobs:
         name: python-dist
         path: wheelhouse/manylinux2010
 
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup build directory
+      run: |
+        # Install HELICS shared library for Linux
+        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-macOS-x86_64.tar.gz
+        tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
+        # Checkout the HELICS source tree into the pip folder
+        git clone -b develop --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+      shell: bash
+    - uses: actions/setup-python@v1
+      with: 
+        python-version: '3.8'
+    - name: Create wheel
+      run: |
+        which python
+        python -m pip install --upgrade pip
+        pip install setuptools wheel
+        CMAKE_PREFIX_PATH="${PWD}/helics"
+        export CMAKE_PREFIX_PATH
+        # Compile wheels
+        cd pip
+        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      shell: bash
+    - uses: actions/upload-artifact@v1
+      with:
+        name: python-dist
+        path: wheelhouse/
+
   build-win64:
     runs-on: windows-latest
     steps:
