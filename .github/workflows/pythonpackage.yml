@@ -6,27 +6,22 @@ on:
   push:
 
 jobs:
-  deploy:
+  build-linux:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2010_x86_64
     steps:
     - uses: actions/checkout@v1
-    - name: Install dependencies
+    - name: Create wheels
       run: |
-        echo $HOME
-        ls /opt/python/cp37-cp37m/lib
-        ls /opt/python/cp37-cp37m/include
         curl -O -L https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz
         tar xzf cmake-*.tar.gz && rm cmake-*.tar.gz && mv cmake-* cmake
         PATH="${PWD}/cmake/bin:${PATH}"
         export PATH
-        cmake --version
         # Install HELICS shared library for Linux
         curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-Linux-x86_64.tar.gz
         tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
         CMAKE_PREFIX_PATH="${PWD}/helics"
         export CMAKE_PREFIX_PATH
-        echo ${CMAKE_PREFIX_PATH}
         # Checkout the HELICS source tree into the pip folder
         git clone -b develop --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
         # Compile wheels
@@ -39,16 +34,44 @@ jobs:
         for whl in wheelhouse/*.whl; do
           auditwheel repair "$whl" --plat manylinux2010_x86_64 -w wheelhouse/manylinux2010
         done
-        #python -m pip install --upgrade pip
-        #pip install setuptools wheel twine
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
         path: wheelhouse/manylinux2010
+
+  build-win64:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup build directory
+      run: |
+        # Install HELICS shared library for Linux
+        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-win64.tar.gz
+        tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
+        # Checkout the HELICS source tree into the pip folder
+        git clone -b develop --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+      shell: bash
+    - name: Create wheel
+      run: |
+        which python
+        python -m pip install --upgrade pip
+        pip install setuptools wheel
+        CMAKE_PREFIX_PATH="${PWD}/helics"
+        export CMAKE_PREFIX_PATH
+        # Compile wheels
+        cd pip
+        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      shell: bash
+    - uses: actions/upload-artifact@v1
+      with:
+        name: python-dist
+        path: wheelhouse/
+
 #    - name: Publish to PyPI
 #      env:
 #        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
 #        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 #      run: |
-#        python setup.py sdist bdist_wheel
+#        python -m pip install --upgrade pip
+#        pip install setuptools wheel twine
 #        twine upload dist/*
