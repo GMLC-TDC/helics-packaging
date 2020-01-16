@@ -43,15 +43,16 @@ class HelicsBuild(build_ext):
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON',
                       # For using the new Python find in CMake should set Python3_ROOT_DIR to os.path.split(os.path.dirname(os.path.abspath(sys.executable)))[0]
-                      # It actually might be way more annoying than that... possibly need to set all variables manually for the Python executable/libraries/include paths
-                      '-DHELICS_USE_NEW_PYTHON_FIND=ON',
-                      '-DPython3_EXECUTABLE=' + sys.executable,
-                      '-DPython3_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
-                      '-DPython3_LIBRARY_RELEASE=/',
-                      '-DPython3_LIBRARY_DEBUG=/',
-                      #'-DPYTHON_EXECUTABLE=' + sys.executable,
-                      #'-DPYTHON_LIBRARY=' + os.path.join(sysconfig.get_python_lib(plat_specific=True, standard_lib=True)),
-                      #'-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
+                      # the CMake FindPython module will likely need changes to support static mode Python interpreters
+                      # https://github.com/pypa/manylinux/issues/30 and https://github.com/pypa/manylinux/issues/255
+                      #'-DHELICS_USE_NEW_PYTHON_FIND=ON',
+                      #'-DPython3_EXECUTABLE=' + sys.executable,
+                      #'-DPython3_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
+                      #'-DPython3_LIBRARY_RELEASE=/',
+                      #'-DPython3_LIBRARY_DEBUG=/',
+                      '-DPYTHON_EXECUTABLE=' + sys.executable,
+                      '-DPYTHON_LIBRARY=' + os.path.join(sysconfig.get_python_lib(plat_specific=True, standard_lib=True)),
+                      '-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
                      ]
 
         # Use SWIG if it is available
