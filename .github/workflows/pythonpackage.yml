@@ -43,6 +43,9 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Setup macOS 10.10 SDK
+      if: runner.os == 'macOS'
+      run: ./.github/workflows/setup-macos-10.10-sdk.sh
     - name: Setup build directory
       run: |
         # Install HELICS shared library for Linux
@@ -55,6 +58,8 @@ jobs:
       with: 
         python-version: '3.8'
     - name: Create wheel
+      env:
+        MACOSX_DEPLOYMENT_TARGET: '10.10'
       run: |
         which python
         python -m pip install --upgrade pip
