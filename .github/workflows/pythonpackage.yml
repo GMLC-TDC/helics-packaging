@@ -23,7 +23,7 @@ jobs:
         CMAKE_PREFIX_PATH="${PWD}/helics"
         export CMAKE_PREFIX_PATH
         # Checkout the HELICS source tree into the pip folder
-        git clone -b develop --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+        git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
         # Compile wheels
         pushd pip
         for PYBIN in /opt/python/cp3*/bin; do
@@ -52,7 +52,7 @@ jobs:
         curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-macOS-x86_64.tar.gz
         tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
         # Checkout the HELICS source tree into the pip folder
-        git clone -b develop --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+        git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
       shell: bash
     - uses: actions/setup-python@v1
       with: 
@@ -79,31 +79,97 @@ jobs:
 
   build-win64:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: [x64, x86]
+        include:
+          - arch: x64
+            winarch: win64
+          - arch: x86
+            winarch: win32
     steps:
     - uses: actions/checkout@v1
     - name: Setup build directory
       run: |
         # Install HELICS shared library for Linux
-        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-win64.tar.gz
+        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-${{ matrix.winarch }}.tar.gz
         tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
         # Checkout the HELICS source tree into the pip folder
-        git clone -b develop --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+        git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
       shell: bash
+    - uses: actions/setup-python@v1
+      with: 
+        python-version: '3.5'
+        architecture: ${{ matrix.arch }}
     - name: Create wheel
       run: |
-        which python
+        python --version
         python -m pip install --upgrade pip
-        pip install setuptools wheel
+        python -m pip install setuptools wheel
         CMAKE_PREFIX_PATH="${PWD}/helics"
         export CMAKE_PREFIX_PATH
         # Compile wheels
         cd pip
         python setup.py bdist_wheel --dist-dir=../wheelhouse
       shell: bash
+    - uses: actions/setup-python@v1
+      with: 
+        python-version: '3.6'
+        architecture: ${{ matrix.arch }}
+    - name: Create wheel
+      run: |
+        python --version
+        python -m pip install --upgrade pip
+        python -m pip install setuptools wheel
+        CMAKE_PREFIX_PATH="${PWD}/helics"
+        export CMAKE_PREFIX_PATH
+        # Compile wheels
+        cd pip
+        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      shell: bash
+    - uses: actions/setup-python@v1
+      with: 
+        python-version: '3.7'
+        architecture: ${{ matrix.arch }}
+    - name: Create wheel
+      run: |
+        python --version
+        python -m pip install --upgrade pip
+        python -m pip install setuptools wheel
+        CMAKE_PREFIX_PATH="${PWD}/helics"
+        export CMAKE_PREFIX_PATH
+        # Compile wheels
+        cd pip
+        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      shell: bash
+    - uses: actions/setup-python@v1
+      with: 
+        python-version: '3.8'
+        architecture: ${{ matrix.arch }}
+    - name: Create wheel
+      run: |
+        python --version
+        python -m pip install --upgrade pip
+        python -m pip install setuptools wheel
+        CMAKE_PREFIX_PATH="${PWD}/helics"
+        export CMAKE_PREFIX_PATH
+        # Compile wheels
+        cd pip
+        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      shell: bash
+    - name: Fixup wheels
+      run: |
+        echo "Add libzmq to each wheel -- wheel unpack, wheel pack"
+      shell: bash
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
         path: wheelhouse/
+    - uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: win-build-dir
+        path: pip/build
 
 #    - name: Publish to PyPI
 #      env:

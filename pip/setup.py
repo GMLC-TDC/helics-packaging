@@ -37,7 +37,9 @@ class HelicsBuild(build_ext):
         if not isinstance(ext, HelicsExtension):
             super().build_extension(ext)
             return
-
+        
+        print("Wow... " + sys.executable)
+        
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
         helicsdir = os.path.abspath(os.path.join(extdir, 'helics'))
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + helicsdir,
@@ -50,10 +52,20 @@ class HelicsBuild(build_ext):
                       #'-DPython3_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
                       #'-DPython3_LIBRARY_RELEASE=/',
                       #'-DPython3_LIBRARY_DEBUG=/',
-                      '-DPYTHON_EXECUTABLE=' + sys.executable,
-                      '-DPYTHON_LIBRARY=' + os.path.join(sysconfig.get_python_lib(plat_specific=True, standard_lib=True)),
-                      '-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
                      ]
+        
+        # This is a hack to get around CMake only working with Python interpreters compiled with --enable-shared
+        # Basically Linux+macOS don't require a library to link to, but Windows always requires linking to a library
+        # Weird thing: on Windows with multiple installs, setting the Python executable can make it find an incorrect library
+        if platform.system() != "Windows":
+            cmake_args += ['-DPYTHON_EXECUTABLE=' + sys.executable,
+                           '-DPYTHON_LIBRARY=' + os.path.join(sysconfig.get_python_lib(plat_specific=True, standard_lib=True)),
+                           '-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
+                          ]
+        #else:
+        #    cmake_args += ['-DPYTHON_LIBRARY=' + os.path.join(os.path.dirname(sys.executable), 'libs', 'python38.lib'),
+        #                   '-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
+        #                  ]
 
         # Use SWIG if it is available
         if _have_swig():
@@ -63,7 +75,7 @@ class HelicsBuild(build_ext):
 
         # CMake build type
         if self.debug:
-            bldcfg = 'Debug'
+            bldcfg = 'Release'
         else:
             bldcfg = 'Release'
         build_args = ['--config', bldcfg]
@@ -82,7 +94,7 @@ class HelicsBuild(build_ext):
 
         # Run CMake and build the helics python extension
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp)
-        subprocess.check_call(['cmake', '--build', '.'], cwd=self.build_temp)
+        subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
         # Include the helics.py file in the module
         if not os.path.exists(helicsdir):
