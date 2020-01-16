@@ -40,7 +40,7 @@ class HelicsBuild(build_ext):
 
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
         helicsdir = os.path.abspath(os.path.join(extdir, 'helics'))
-        cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
+        cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + helicsdir,
                       '-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON',
                       # For using the new Python find in CMake should set Python3_ROOT_DIR to os.path.split(os.path.dirname(os.path.abspath(sys.executable)))[0]
                       # the CMake FindPython module will likely need changes to support static mode Python interpreters
@@ -69,7 +69,7 @@ class HelicsBuild(build_ext):
         build_args = ['--config', bldcfg]
 
         if platform.system() == "Windows":
-            cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(bldcfg.upper(), extdir)]
+            cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(bldcfg.upper(), helicsdir)]
             if struct.calcsize('P') == 8:
                 cmake_args += ['-A', 'x64']
             else:
@@ -87,10 +87,10 @@ class HelicsBuild(build_ext):
         # Include the helics.py file in the module
         if not os.path.exists(helicsdir):
             os.makedirs(helicsdir)
-        copyfile(os.path.join(self.build_temp, 'helics.py'), os.path.join(extdir, 'helics.py'))
+        copyfile(os.path.join(self.build_temp, 'helics.py'), os.path.join(helicsdir, 'helics.py'))
 
 setup(
-    name='helics_test',
+    name='helics',
     version='2.3.1',
     author='GMLC-TDC',
     author_email='helicsdevelopers@helics.org',
@@ -102,7 +102,8 @@ setup(
     keywords='co-simulation',
     description='Hierarchical Engine for Large-scale Infrastructure Co-Simulation (HELICS)',
     long_description='',
-    ext_modules=[HelicsExtension('cmake_example', sourcedir='bundled/helics/interfaces/python')],
+    packages=['helics'],
+    ext_modules=[HelicsExtension('helics', sourcedir='bundled/helics/interfaces/python')],
     cmdclass=dict(build_ext=HelicsBuild),
     entry_points={
         'console_scripts': [

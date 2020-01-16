@@ -37,14 +37,14 @@ jobs:
         popd
         # Bundle external shared libraries into the wheels
         for whl in wheelhouse/*.whl; do
-          auditwheel repair "$whl" --plat manylinux2010_x86_64 -w wheelhouse/
+          auditwheel repair "$whl" --plat manylinux2010_x86_64 -w wheelhouse/manylinux2010
         done
         #python -m pip install --upgrade pip
         #pip install setuptools wheel twine
     - uses: actions/upload-artifact@v1
       with:
-        name: python-linux-wheels
-        path: wheelhouse/
+        name: python-dist
+        path: wheelhouse/manylinux2010
 #    - name: Publish to PyPI
 #      env:
 #        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
