@@ -61,19 +61,21 @@ jobs:
       env:
         MACOSX_DEPLOYMENT_TARGET: '10.10'
       run: |
-        which python
         python -m pip install --upgrade pip
-        pip install setuptools wheel
+        pip install setuptools wheel delocate
         CMAKE_PREFIX_PATH="${PWD}/helics"
         export CMAKE_PREFIX_PATH
         # Compile wheels
-        cd pip
+        pushd pip
         python setup.py bdist_wheel --dist-dir=../wheelhouse
+        popd
+        cd wheelhouse
+        delocate-wheel -w fixed-wheels -v helics-*.whl
       shell: bash
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
-        path: wheelhouse/
+        path: wheelhouse/fixed-wheels
 
   build-win64:
     runs-on: windows-latest
