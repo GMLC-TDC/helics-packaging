@@ -56,7 +56,7 @@ jobs:
       shell: bash
     - uses: actions/setup-python@v1
       with: 
-        python-version: '3.8'
+        python-version: '3.7'
     - name: Create wheel
       env:
         MACOSX_DEPLOYMENT_TARGET: '10.10'
@@ -69,7 +69,10 @@ jobs:
         pushd pip
         python setup.py bdist_wheel --dist-dir=../wheelhouse
         popd
+        DYLD_LIBRARY_PATH="$PWD/helics/lib:$PWD/helics/lib64:$DYLD_LIBRARY_PATH"
+        export DYLD_LIBRARY_PATH
         cd wheelhouse
+        delocate-listdeps --all helics-*.whl
         delocate-wheel -w fixed-wheels -v helics-*.whl
       shell: bash
     - uses: actions/upload-artifact@v1
