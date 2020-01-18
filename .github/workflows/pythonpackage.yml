@@ -48,7 +48,7 @@ jobs:
       run: ./.github/workflows/setup-macos-10.10-sdk.sh
     - name: Setup build directory
       run: |
-        # Install HELICS shared library for Linux
+        # Install HELICS shared library for macOS
         curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-macOS-x86_64.tar.gz
         tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
         # Checkout the HELICS source tree into the pip folder
@@ -94,11 +94,12 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup build directory
       run: |
-        # Install HELICS shared library for Linux
+        # Install HELICS shared library for Windows
         curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-${{ matrix.winarch }}.tar.gz
         tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
         # Checkout the HELICS source tree into the pip folder
         git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+        mkdir wheelhouse
       shell: bash
     - uses: actions/setup-python@v1
       with: 
@@ -113,7 +114,11 @@ jobs:
         export CMAKE_PREFIX_PATH
         # Compile wheels
         cd pip
-        python setup.py bdist_wheel --dist-dir=../wheelhouse
+        python setup.py bdist_wheel --dist-dir=tmp_dist
+        cd tmp_dist
+        wheel unpack helics-*.whl
+        cp ../../helics/bin/libzmq*.dll helics-*/helics/
+        wheel pack helics-*/ --dest-dir=../../wheelhouse
       shell: bash
     - uses: actions/setup-python@v1
       with: 
