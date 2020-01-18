@@ -101,9 +101,14 @@ class HelicsBuild(build_ext):
             os.makedirs(helicsdir)
         copyfile(os.path.join(self.build_temp, 'helics.py'), os.path.join(helicsdir, 'helics.py'))
 
+# Get the version
+setup_py_dir = os.path.abspath(os.path.dirname(__file__))
+version_ns = {}
+exec(open(os.path.join(setup_py_dir, 'helics/_version.py')).read(), version_ns)
+
 setup(
     name='helics',
-    version='2.3.1',
+    version=version_ns['__version__'],
     author='GMLC-TDC',
     author_email='helicsdevelopers@helics.org',
     maintainer='',
