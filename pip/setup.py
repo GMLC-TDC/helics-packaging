@@ -116,6 +116,7 @@ setup(
     url="https://github.com/GMLC-TDC/HELICS",
     download_url="https://github.com/GMLC-TDC/HELICS/releases",
     license='BSD',
+    license_files='LICENSE',
     keywords='co-simulation',
     description='Hierarchical Engine for Large-scale Infrastructure Co-Simulation (HELICS)',
     long_description='',
