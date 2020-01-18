@@ -11,3 +11,6 @@ tar -xf MacOSX10.10.sdk.tar.xz -C "${XCODE_MACOS_SDK_PATH}"
 
 # Set the MinimumSDKVersion for XCode to 10.10
 /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion 10.10" "${XCODE_MACOS_PLATFORM_PATH}/Info.plist"
+
+# Set MACOSX_DEPLOYMENT_TARGET on GitHub Actions
+echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::10.10"

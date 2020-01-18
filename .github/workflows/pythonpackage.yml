@@ -13,27 +13,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Create wheels
       run: |
-        curl -O -L https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz
-        tar xzf cmake-*.tar.gz && rm cmake-*.tar.gz && mv cmake-* cmake
-        PATH="${PWD}/cmake/bin:${PATH}"
-        export PATH
-        # Install HELICS shared library for Linux
-        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-Linux-x86_64.tar.gz
-        tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
-        CMAKE_PREFIX_PATH="${PWD}/helics"
-        export CMAKE_PREFIX_PATH
-        # Checkout the HELICS source tree into the pip folder
-        git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
-        # Compile wheels
-        pushd pip
-        for PYBIN in /opt/python/cp3*/bin; do
-          "${PYBIN}/python" setup.py bdist_wheel --dist-dir=../wheelhouse
-        done
-        popd
-        # Bundle external shared libraries into the wheels
-        for whl in wheelhouse/*.whl; do
-          auditwheel repair "$whl" --plat manylinux2010_x86_64 -w wheelhouse/manylinux2010
-        done
+        source ./pip/packaging_scripts/setup-Linux.sh "$(cat VERSION)"
+        ./pip/packaging_scripts/build-Linux.sh
+        ./pip/packaging_scripts/repair-Linux.sh
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
@@ -47,34 +29,42 @@ jobs:
       if: runner.os == 'macOS'
       run: ./.github/workflows/setup-macos-10.10-sdk.sh
     - name: Setup build directory
-      run: |
-        # Install HELICS shared library for macOS
-        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-macOS-x86_64.tar.gz
-        tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
-        # Checkout the HELICS source tree into the pip folder
-        git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
+      run: source ./pip/packaging_scripts/setup-macOS.sh "$(cat VERSION)"
+      shell: bash
+
+    - uses: actions/setup-python@v1
+      name: Setup Python 3.5
+      with: 
+        python-version: '3.5'
+    - name: Create wheel
+      run: ./pip/packaging_scripts/build-macOS.sh
       shell: bash
     - uses: actions/setup-python@v1
+      name: Setup Python 3.6
+      with: 
+        python-version: '3.6'
+    - name: Create wheel
+      run: ./pip/packaging_scripts/build-macOS.sh
+      shell: bash
+    - uses: actions/setup-python@v1
+      name: Setup Python 3.7
       with: 
         python-version: '3.7'
     - name: Create wheel
-      env:
-        MACOSX_DEPLOYMENT_TARGET: '10.10'
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel delocate
-        CMAKE_PREFIX_PATH="${PWD}/helics"
-        export CMAKE_PREFIX_PATH
-        # Compile wheels
-        pushd pip
-        python setup.py bdist_wheel --dist-dir=../wheelhouse
-        popd
-        DYLD_LIBRARY_PATH="$PWD/helics/lib:$PWD/helics/lib64:$DYLD_LIBRARY_PATH"
-        export DYLD_LIBRARY_PATH
-        cd wheelhouse
-        delocate-listdeps --all helics-*.whl
-        delocate-wheel -w fixed-wheels -v helics-*.whl
+      run: ./pip/packaging_scripts/build-macOS.sh
       shell: bash
+    - uses: actions/setup-python@v1
+      name: Setup Python 3.8
+      with: 
+        python-version: '3.8'
+    - name: Create wheel
+      run: ./pip/packaging_scripts/build-macOS.sh
+      shell: bash
+
+    - name: Delocate wheels
+      run: ./pip/packaging_scripts/repair-macOS.sh
+      shell: bash
+    
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
@@ -93,91 +83,49 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup build directory
-      run: |
-        # Install HELICS shared library for Windows
-        curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-2.3.1-${{ matrix.winarch }}.tar.gz
-        tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
-        # Checkout the HELICS source tree into the pip folder
-        git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
-        mkdir wheelhouse
+      run: source ./pip/packaging_scripts/setup-Windows.sh "$(cat VERSION)" "${{ matrix.winarch }}"
       shell: bash
     - uses: actions/setup-python@v1
+      name: Setup Python 3.5
       with: 
         python-version: '3.5'
         architecture: ${{ matrix.arch }}
     - name: Create wheel
-      run: |
-        python --version
-        python -m pip install --upgrade pip
-        python -m pip install setuptools wheel
-        CMAKE_PREFIX_PATH="${PWD}/helics"
-        export CMAKE_PREFIX_PATH
-        # Compile wheels
-        cd pip
-        python setup.py bdist_wheel --dist-dir=tmp_dist
-        cd tmp_dist
-        wheel unpack helics-*.whl
-        cp ../../helics/bin/libzmq*.dll helics-*/helics/
-        wheel pack helics-*/ --dest-dir=../../wheelhouse
+      run: ./pip/packaging_scripts/build-Windows.sh
       shell: bash
     - uses: actions/setup-python@v1
+      name: Setup Python 3.6
       with: 
         python-version: '3.6'
         architecture: ${{ matrix.arch }}
     - name: Create wheel
-      run: |
-        python --version
-        python -m pip install --upgrade pip
-        python -m pip install setuptools wheel
-        CMAKE_PREFIX_PATH="${PWD}/helics"
-        export CMAKE_PREFIX_PATH
-        # Compile wheels
-        cd pip
-        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      run: ./pip/packaging_scripts/build-Windows.sh
       shell: bash
     - uses: actions/setup-python@v1
+      name: Setup Python 3.7
       with: 
         python-version: '3.7'
         architecture: ${{ matrix.arch }}
     - name: Create wheel
-      run: |
-        python --version
-        python -m pip install --upgrade pip
-        python -m pip install setuptools wheel
-        CMAKE_PREFIX_PATH="${PWD}/helics"
-        export CMAKE_PREFIX_PATH
-        # Compile wheels
-        cd pip
-        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      run: ./pip/packaging_scripts/build-Windows.sh
       shell: bash
     - uses: actions/setup-python@v1
+      name: Setup Python 3.8
       with: 
         python-version: '3.8'
         architecture: ${{ matrix.arch }}
     - name: Create wheel
-      run: |
-        python --version
-        python -m pip install --upgrade pip
-        python -m pip install setuptools wheel
-        CMAKE_PREFIX_PATH="${PWD}/helics"
-        export CMAKE_PREFIX_PATH
-        # Compile wheels
-        cd pip
-        python setup.py bdist_wheel --dist-dir=../wheelhouse
+      run: ./pip/packaging_scripts/build-Windows.sh
       shell: bash
-    - name: Fixup wheels
-      run: |
-        echo "Add libzmq to each wheel -- wheel unpack, wheel pack"
+
+    - name: Repair wheels
+      run: ./pip/packaging_scripts/repair-Windows.sh
       shell: bash
+
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
-        path: wheelhouse/
-    - uses: actions/upload-artifact@v1
-      if: always()
-      with:
-        name: win-build-dir
-        path: pip/build
+        path: wheelhouse/fixed-wheels/
 
 #    - name: Publish to PyPI
 #      env:
