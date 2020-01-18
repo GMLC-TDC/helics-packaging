@@ -127,11 +127,25 @@ jobs:
         name: python-dist
         path: wheelhouse/fixed-wheels/
 
-# Add job for a sdist archive here
+  build-sdist:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build source distribution
+      run: |
+        VERSION=$(cat VERSION)
+        mkdir -p pip/bundled/helics
+        curl -O -L https://github.com/nightlark/HELICS/releases/download/v${VERSION}/Helics-v${VERSION}-source.tar.gz
+        tar xzf Helics-*.tar.gz -C pip/bundled/helics/ && rm Helics-*.tar.gz
+        cd pip
+        python setup.py sdist
+    - uses: actions/upload-artifact@v1
+      with:
+        name: python-dist
+        path: pip/dist
 
   publish:
-    name: Publish
-    needs: [build-linux, build-macos, build-windows]
+    needs: [build-sdist, build-linux, build-macos, build-windows]
     runs-on: ubuntu-latest
     steps:
     - name: Get all submodules archive
