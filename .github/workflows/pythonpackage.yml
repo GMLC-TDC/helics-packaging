@@ -70,7 +70,7 @@ jobs:
         name: python-dist
         path: wheelhouse/fixed-wheels
 
-  build-win64:
+  build-windows:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -127,11 +127,24 @@ jobs:
         name: python-dist
         path: wheelhouse/fixed-wheels/
 
-#    - name: Publish to PyPI
-#      env:
-#        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-#        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-#      run: |
-#        python -m pip install --upgrade pip
-#        pip install setuptools wheel twine
-#        twine upload dist/*
+# Add job for a sdist archive here
+
+  publish:
+    name: Publish
+    needs: [build-linux, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get all submodules archive
+      uses: actions/download-artifact@v1
+      with:
+        name: python-dist
+        path: dist
+    - name: Check dist folder layout
+      run: ls dist
+#- name: Publish package to TestPyPI
+#  uses: pypa/gh-action-pypi-publish@master
+#  with:
+#    user: __token__
+#    password: ${{ secrets.test_pypi_password }}
+#    repository_url: https://test.pypi.org/legacy/
+#    packages_dir: custom-dir/
