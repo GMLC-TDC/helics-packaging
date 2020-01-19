@@ -101,10 +101,15 @@ class HelicsBuild(build_ext):
             os.makedirs(helicsdir)
         copyfile(os.path.join(self.build_temp, 'helics.py'), os.path.join(helicsdir, 'helics.py'))
 
-# Get the version
+# Get the directory setup.py is located in
 setup_py_dir = os.path.abspath(os.path.dirname(__file__))
+
+# Get the version
 version_ns = {}
 exec(open(os.path.join(setup_py_dir, 'helics/_version.py')).read(), version_ns)
+
+# Get the README.md contents
+README_contents = open(os.path.join(setup_py_dir, 'README.md'), encoding='utf-8').read()
 
 setup(
     name='helics',
@@ -118,7 +123,8 @@ setup(
     license='BSD',
     keywords='co-simulation',
     description='Hierarchical Engine for Large-scale Infrastructure Co-Simulation (HELICS)',
-    long_description='',
+    long_description=README_contents,
+    long_description_content_type='text/markdown',
     packages=['helics'],
     ext_modules=[HelicsExtension('helics', sourcedir='bundled/helics/interfaces/python')],
     cmdclass=dict(build_ext=HelicsBuild),
