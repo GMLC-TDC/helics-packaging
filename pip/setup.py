@@ -68,6 +68,10 @@ class HelicsBuild(build_ext):
         #                   '-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
         #                  ]
 
+        # Add the Python 2 flag for building a Python 2 compatible swig module
+        if sys.version_info[0] == 2:
+            cmake_args += ['-DBUILD_PYTHON2_INTERFACE=ON']
+        
         # Use SWIG if it is available
         if _have_swig():
             cmake_args += ['-DHELICS_ENABLE_SWIG=ON']
