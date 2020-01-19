@@ -8,7 +8,7 @@ PATH="${PWD}/cmake/bin:${PATH}"
 export PATH
 
 # Get HELICS shared library for Linux
-curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-${VERSION}-Linux-x86_64.tar.gz
+curl -O -L https://github.com/nightlark/HELICS/releases/download/v${VERSION}/Helics-shared-${VERSION}-Linux-x86_64.tar.gz
 tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
 CMAKE_PREFIX_PATH="${PWD}/helics"
 export CMAKE_PREFIX_PATH

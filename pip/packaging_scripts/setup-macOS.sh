@@ -3,7 +3,7 @@
 VERSION=$1
 
 # Install HELICS shared library for macOS
-curl -O -L https://github.com/nightlark/HELICS/releases/latest/download/Helics-shared-${VERSION}-macOS-x86_64.tar.gz
+curl -O -L https://github.com/nightlark/HELICS/releases/download/v${VERSION}/Helics-shared-${VERSION}-macOS-x86_64.tar.gz
 tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
 
 # Checkout the HELICS source tree into the pip folder
