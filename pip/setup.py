@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import struct
@@ -106,10 +107,10 @@ setup_py_dir = os.path.abspath(os.path.dirname(__file__))
 
 # Get the version
 version_ns = {}
-exec(open(os.path.join(setup_py_dir, 'helics/_version.py')).read(), version_ns)
+exec(io.open(os.path.join(setup_py_dir, 'helics/_version.py')).read(), version_ns)
 
 # Get the README.md contents
-README_contents = open(os.path.join(setup_py_dir, 'README.md'), encoding='utf-8').read()
+README_contents = io.open(os.path.join(setup_py_dir, 'README.md'), encoding="utf-8").read()
 
 setup(
     name='helics',
