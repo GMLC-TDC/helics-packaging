@@ -4,6 +4,14 @@ simulation tools to exchange data and stay synchronized in time to create larger
 wrapper for the C API provided by HELICS.
 
 ## Installation
+As a general recommendation if you are on an older system or version of Python, it is probably a good idea to
+update pip with `python -m pip install --upgrade` to make sure you have the latest features. At minimum for
+the Linux binary wheels to work properly, [pip 19.0 is required](https://packaging.python.org/specifications/platform-compatibility-tags/#manylinux-compatibility-support).
+
+After that, running `python -m pip install helics` should fetch a binary wheel if one is available for your
+platform. Otherwise, you may need to set your environment up with a HELICS install and CMake so that pip can
+build the extension from source.
+
 ### Binary distributions
 This package provides pre-compiled binary wheels for the following CPython versions:
 
