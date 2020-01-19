@@ -148,17 +148,15 @@ jobs:
     needs: [build-sdist, build-linux, build-macos, build-windows]
     runs-on: ubuntu-latest
     steps:
-    - name: Get all submodules archive
+    - name: Get the built packages
       uses: actions/download-artifact@v1
       with:
         name: python-dist
         path: dist
-    - name: Check dist folder layout
-      run: ls dist
-#- name: Publish package to TestPyPI
-#  uses: pypa/gh-action-pypi-publish@master
-#  with:
-#    user: __token__
-#    password: ${{ secrets.test_pypi_password }}
-#    repository_url: https://test.pypi.org/legacy/
-#    packages_dir: custom-dir/
+    - name: Publish package to TestPyPI
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: __token__
+        password: ${{ secrets.test_pypi_password }}
+        repository_url: https://test.pypi.org/legacy/
+#        packages_dir: custom-dir/
