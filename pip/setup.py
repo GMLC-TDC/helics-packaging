@@ -39,8 +39,6 @@ class HelicsBuild(build_ext):
             super().build_extension(ext)
             return
         
-        print("Wow... " + sys.executable)
-        
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
         helicsdir = os.path.abspath(os.path.join(extdir, 'helics'))
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + helicsdir,
