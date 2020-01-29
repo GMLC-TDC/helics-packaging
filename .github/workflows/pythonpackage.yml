@@ -25,9 +25,9 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Setup macOS 10.10 SDK
+    - name: Setup macOS SDK
       if: runner.os == 'macOS'
-      run: ./.github/workflows/setup-macos-10.10-sdk.sh
+      run: ./.github/workflows/setup-macos-10.9-sdk.sh
     - name: Setup build directory
       run: source ./pip/packaging_scripts/setup-macOS.sh "$(cat VERSION)"
       shell: bash
