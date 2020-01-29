@@ -7,6 +7,8 @@ tar xzf cmake-*.tar.gz && rm cmake-*.tar.gz && mv cmake-* cmake
 PATH="${PWD}/cmake/bin:${PATH}"
 export PATH
 
+# Install swig, but don't add it to the PATH until the Python 3 interfaces are built
+
 # Get HELICS shared library for Linux
 curl -O -L https://github.com/nightlark/HELICS/releases/download/v${VERSION}/Helics-shared-${VERSION}-Linux-x86_64.tar.gz
 tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics

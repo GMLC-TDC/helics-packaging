@@ -61,6 +61,14 @@ jobs:
       run: ./pip/packaging_scripts/build-macOS.sh
       shell: bash
 
+    - uses: actions/setup-python@v1
+      name: Setup Python 2.7
+      with: 
+        python-version: '2.7'
+    - name: Create wheel
+      run: brew install swig && ./pip/packaging_scripts/build-macOS.sh
+      shell: bash
+
     - name: Delocate wheels
       run: ./pip/packaging_scripts/repair-macOS.sh
       shell: bash
@@ -116,6 +124,15 @@ jobs:
         architecture: ${{ matrix.arch }}
     - name: Create wheel
       run: ./pip/packaging_scripts/build-Windows.sh
+      shell: bash
+      
+    - uses: actions/setup-python@v1
+      name: Setup Python 2.7
+      with: 
+        python-version: '2.7'
+        architecture: ${{ matrix.arch }}
+    - name: Create wheel
+      run: choco install -y swig && ./pip/packaging_scripts/build-Windows.sh
       shell: bash
 
     - name: Repair wheels
