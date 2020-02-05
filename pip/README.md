@@ -15,9 +15,9 @@ build the extension from source.
 ### Binary distributions
 This package provides pre-compiled binary wheels for the following CPython versions:
 
-* Linux 64-bit Python 3.4-3.8 (manylinux2010 compatible)
-* macOS (10.13+) 64-bit Python 3.5-3.8
-* Windows 32/64-bit Python 3.5-3.8
+* Linux 64-bit Python 2.7 and 3.4-3.8 (manylinux2010 compatible)
+* macOS (10.9+) 64-bit Python 2.7 and 3.5-3.8
+* Windows 32/64-bit Python 2.7 and 3.5-3.8
 
 Each of the binary wheels for the above platforms includes a copy of the helics C shared library. For other
 HELICS apps such as the broker, the HELICS project provides pre-compiled copies of those apps for 64-bit
