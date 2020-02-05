@@ -8,6 +8,16 @@ PATH="${PWD}/cmake/bin:${PATH}"
 export PATH
 
 # Install swig, but don't add it to the PATH until the Python 3 interfaces are built
+curl -L -o "swig-4.0.1.tar.gz" \
+           "https://sourceforge.net/projects/swig/files/swig/swig-4.0.1/swig-4.0.1.tar.gz/download"
+tar -zxf "swig-4.0.1.tar.gz"
+pushd swig-4.0.1
+curl -L -O "https://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz"
+./Tools/pcre-build.sh
+./configure --prefix "$HOME/swig-install"
+make
+make install
+popd
 
 # Get HELICS shared library for Linux
 curl -O -L https://github.com/nightlark/HELICS/releases/download/v${VERSION}/Helics-shared-${VERSION}-Linux-x86_64.tar.gz
