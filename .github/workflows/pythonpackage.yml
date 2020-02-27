@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Create wheels
       run: |
-        source ./pip/packaging_scripts/setup-Linux.sh "$(cat VERSION)"
+        source ./pip/packaging_scripts/setup-Linux.sh "$(cat HELICS_VERSION)"
         ./pip/packaging_scripts/build-Linux.sh
         ./pip/packaging_scripts/repair-Linux.sh
     - uses: actions/upload-artifact@v1
@@ -29,7 +29,7 @@ jobs:
       if: runner.os == 'macOS'
       run: ./.github/workflows/setup-macos-10.9-sdk.sh
     - name: Setup build directory
-      run: source ./pip/packaging_scripts/setup-macOS.sh "$(cat VERSION)"
+      run: source ./pip/packaging_scripts/setup-macOS.sh "$(cat HELICS_VERSION)"
       shell: bash
 
     - uses: actions/setup-python@v1
@@ -91,7 +91,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup build directory
-      run: source ./pip/packaging_scripts/setup-Windows.sh "$(cat VERSION)" "${{ matrix.winarch }}"
+      run: source ./pip/packaging_scripts/setup-Windows.sh "$(cat HELICS_VERSION)" "${{ matrix.winarch }}"
       shell: bash
     - uses: actions/setup-python@v1
       name: Setup Python 3.5
@@ -150,9 +150,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build source distribution
       run: |
-        VERSION=$(cat VERSION)
+        HELICS_VERSION=$(cat HELICS_VERSION)
         mkdir -p pip/bundled/helics
-        curl -O -L https://github.com/nightlark/HELICS/releases/download/v${VERSION}/Helics-v${VERSION}-source.tar.gz
+        curl -O -L https://github.com/nightlark/HELICS/releases/download/v${HELICS_VERSION}/Helics-v${HELICS_VERSION}-source.tar.gz
         tar xzf Helics-*.tar.gz -C pip/bundled/helics/ && rm Helics-*.tar.gz
         cd pip
         python setup.py sdist

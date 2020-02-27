@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=$1
+HELICS_VERSION=$1
 
 curl -O -L https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz
 tar xzf cmake-*.tar.gz && rm cmake-*.tar.gz && mv cmake-* cmake
@@ -20,7 +20,7 @@ make install
 popd
 
 # Get HELICS shared library for Linux
-curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${VERSION}/Helics-shared-${VERSION}-Linux-x86_64.tar.gz"
+curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-shared-${HELICS_VERSION}-Linux-x86_64.tar.gz"
 tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
 CMAKE_PREFIX_PATH="${PWD}/helics"
 export CMAKE_PREFIX_PATH
