@@ -5,6 +5,7 @@ import struct
 import platform
 import sysconfig
 import subprocess
+import versioneer
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
@@ -38,7 +39,7 @@ class HelicsBuild(build_ext):
         if not isinstance(ext, HelicsExtension):
             super().build_extension(ext)
             return
-        
+
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
         helicsdir = os.path.abspath(os.path.join(extdir, 'helics'))
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + helicsdir,
@@ -52,7 +53,7 @@ class HelicsBuild(build_ext):
                       #'-DPython3_LIBRARY_RELEASE=/',
                       #'-DPython3_LIBRARY_DEBUG=/',
                      ]
-        
+
         # This is a hack to get around CMake only working with Python interpreters compiled with --enable-shared
         # Basically Linux+macOS don't require a library to link to, but Windows always requires linking to a library
         # Weird thing: on Windows with multiple installs, setting the Python executable can make it find an incorrect library
@@ -69,7 +70,7 @@ class HelicsBuild(build_ext):
         # Add the Python 2 flag for building a Python 2 compatible swig module
         if sys.version_info[0] == 2:
             cmake_args += ['-DBUILD_PYTHON2_INTERFACE=ON']
-        
+
         # Use SWIG if it is available
         if _have_swig():
             cmake_args += ['-DHELICS_ENABLE_SWIG=ON']
@@ -107,16 +108,25 @@ class HelicsBuild(build_ext):
 # Get the directory setup.py is located in
 setup_py_dir = os.path.abspath(os.path.dirname(__file__))
 
-# Get the version
-version_ns = {}
-exec(io.open(os.path.join(setup_py_dir, 'helics/_version.py')).read(), version_ns)
-
 # Get the README.md contents
 README_contents = io.open(os.path.join(setup_py_dir, 'README.md'), encoding="utf-8").read()
 
+# Use versioneer to get the version tag
+PKG_VERSION = versioneer.get_version()
+
+# Try getting a version from PKG-INFO if this is a build from an sdist package
+if PKG_VERSION == "0+unknown":
+    try:
+        with open(os.path.join(setup_py_dir, 'PKG-INFO')) as f:
+            for line in f:
+                if line.startswith("Version:"):
+                    PKG_VERSION=line[8:].strip()
+    except IOError:
+        print("Unable to get a package version, using 0+unknown")
+
 setup(
     name='helics',
-    version=version_ns['__version__'],
+    version=PKG_VERSION,
     author='GMLC-TDC',
     author_email='helicsdevelopers@helics.org',
     maintainer='',
@@ -130,7 +140,10 @@ setup(
     long_description_content_type='text/markdown',
     packages=['helics'],
     ext_modules=[HelicsExtension('helics', sourcedir='bundled/helics/interfaces/python')],
-    cmdclass=dict(build_ext=HelicsBuild),
+    cmdclass={
+        'build_ext': HelicsBuild,
+        'versioneer': versioneer.get_cmdclass()
+    },
     entry_points={
         'console_scripts': [
         ]

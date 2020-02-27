@@ -1,1 +1,3 @@
 graft bundled
+include versioneer.py
+include helics/_version.py
