@@ -64,7 +64,7 @@ class HelicsBuild(build_ext):
         # This is a hack to get around CMake only working with Python interpreters compiled with --enable-shared
         # Basically Linux+macOS don't require a library to link to, but Windows always requires linking to a library
         # Weird thing: on Windows with multiple installs, setting the Python executable can make it find an incorrect library
-        os.environ
+        print(os.environ.get('MSYSTEM'))
         if platform.system() != "Windows":
             cmake_args += ['-DPYTHON_EXECUTABLE=' + sys.executable,
                            '-DPYTHON_LIBRARY=' + os.path.join(sysconfig.get_python_lib(plat_specific=True, standard_lib=True)),
