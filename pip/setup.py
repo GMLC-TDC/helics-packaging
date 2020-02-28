@@ -65,7 +65,7 @@ class HelicsBuild(build_ext):
         # Basically Linux+macOS don't require a library to link to, but Windows always requires linking to a library
         # Weird thing: on Windows with multiple installs, setting the Python executable can make it find an incorrect library
         print(os.environ.get('MSYSTEM'))
-        if platform.system() != "Windows":
+        if platform.system() != "Windows" or ('MSYSTEM' in os.environ and not _is_vs_cmake_default()):
             cmake_args += ['-DPYTHON_EXECUTABLE=' + sys.executable,
                            '-DPYTHON_LIBRARY=' + os.path.join(sysconfig.get_python_lib(plat_specific=True, standard_lib=True)),
                            '-DPYTHON_INCLUDE_DIR=' + sysconfig.get_python_inc(plat_specific=True),
