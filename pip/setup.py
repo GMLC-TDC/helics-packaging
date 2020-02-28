@@ -92,12 +92,14 @@ class HelicsBuild(build_ext):
         build_args = ['--config', bldcfg]
 
         if platform.system() == "Windows" and not _is_vs_cmake_default():
+            print("Using VS")
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(bldcfg.upper(), helicsdir)]
             if struct.calcsize('P') == 8:
                 cmake_args += ['-A', 'x64']
             else:
                 cmake_args += ['-A', 'Win32']
         else:
+            print("Using Makefiles")
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + bldcfg]
 
         if not os.path.exists(self.build_temp):
