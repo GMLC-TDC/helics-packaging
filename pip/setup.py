@@ -3,7 +3,6 @@ import os
 import sys
 import struct
 import platform
-import sysconfig
 import subprocess
 import versioneer
 
@@ -24,6 +23,14 @@ def _have_swig():
         return False
     else:
         return True
+
+def _is_vs_cmake_default():
+    try:
+        cmake_help_output=subprocess.check_output(['cmake', '--help'])
+    except OSError:
+        return False
+    else:
+        return '* Visual Studio' in cmake_help_output
 
 class HelicsBuild(build_ext):
     def run(self):
@@ -84,7 +91,7 @@ class HelicsBuild(build_ext):
             bldcfg = 'Release'
         build_args = ['--config', bldcfg]
 
-        if platform.system() == "Windows" and not 'MSYSTEM' in os.environ:
+        if platform.system() == "Windows" and not _is_vs_cmake_default():
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(bldcfg.upper(), helicsdir)]
             if struct.calcsize('P') == 8:
                 cmake_args += ['-A', 'x64']
