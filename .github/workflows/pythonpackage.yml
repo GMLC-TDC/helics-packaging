@@ -166,7 +166,7 @@ jobs:
   publish:
     needs: [build-sdist, build-linux, build-macos, build-windows]
     runs-on: ubuntu-latest
-    if: github.event.action == 'published' || github.ref == 'master'
+    if: github.event.action == 'published' || endsWith(github.ref, 'master')
     steps:
     - name: Get the built packages
       uses: actions/download-artifact@v1
@@ -181,7 +181,7 @@ jobs:
 #      run: for filename in dist/*; do ./.github/workflows/upload-release-asset.sh "${filename}"; done
 
     - name: Publish package to TestPyPI
-      if: github.ref == 'master'
+      if: endsWith(github.ref, 'master')
       uses: pypa/gh-action-pypi-publish@master
       with:
         user: __token__
