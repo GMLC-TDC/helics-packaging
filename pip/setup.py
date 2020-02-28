@@ -30,6 +30,7 @@ def _is_vs_cmake_default():
     except OSError:
         return False
     else:
+        print(cmake_help_output)
         return '* Visual Studio' in str(cmake_help_output)
 
 class HelicsBuild(build_ext):
