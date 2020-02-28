@@ -84,7 +84,7 @@ class HelicsBuild(build_ext):
             bldcfg = 'Release'
         build_args = ['--config', bldcfg]
 
-        if platform.system() == "Windows":
+        if platform.system() == "Windows" and not 'MSYSTEM' in os.environ:
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(bldcfg.upper(), helicsdir)]
             if struct.calcsize('P') == 8:
                 cmake_args += ['-A', 'x64']
