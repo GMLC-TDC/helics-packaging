@@ -4,7 +4,7 @@ HELICS_VERSION=$1
 
 # Install HELICS shared library for macOS
 curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-shared-${HELICS_VERSION}-macOS-x86_64.tar.gz"
-tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics
+tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics || exit $?
 
 # Checkout the HELICS source tree into the pip folder
 git clone -b python-nolink --single-branch https://github.com/GMLC-TDC/HELICS pip/bundled/helics
