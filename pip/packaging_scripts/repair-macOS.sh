@@ -8,7 +8,7 @@ pip install delocate
 
 # Get rid of second post in .post?.post. tag
 for whl in wheelhouse/*.post*.post.*.whl; do
-    mv "$whl" "${whl//\.post\./\.}"
+    mv "$whl" "${whl//\.post\./.}"
 done
 
 # Bundle external shared libraries into the wheels
