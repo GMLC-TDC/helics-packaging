@@ -6,6 +6,11 @@ export DYLD_LIBRARY_PATH
 python -m pip install --upgrade pip
 pip install delocate
 
+# Get rid of second post in .post?.post. tag
+for whl in wheelhouse/*.post*.post.*.whl; do
+    mv "$whl" "${whl//\.post\./\.}"
+done
+
 # Bundle external shared libraries into the wheels
 for whl in wheelhouse/*.whl; do
   delocate-wheel -v "$whl" -w wheelhouse/fixed-wheels
