@@ -8,6 +8,7 @@ jobs:
     if: github.event.action == 'helics-version-update'
     steps:
     - uses: actions/checkout@v2
-    - name: Update the HELICS_VERSION file
-      run: |
-        echo Received notification of new HELICS [repo: ${{ github.event.client_payload.repository }}] release ${{ github.event.client_payload.tag_name }}
+    - name: Update the HELICS_VERSION file to ${{ github.event.client_payload.version }}
+      run: echo "${{ github.event.client_payload.version }}" > HELICS_VERSION
+    - name: Commit updated HELICS_VERSION file
+      run: git diff
