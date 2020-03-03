@@ -10,4 +10,4 @@ jobs:
     - uses: actions/checkout@v2
     - name: Update the HELICS_VERSION file
       run: |
-        echo Received notification of new HELICS (repo: ${{ github.event.client_payload.repository }}) release ${{ github.event.client_payload.tag_name }}
+        echo Received notification of new HELICS [repo: ${{ github.event.client_payload.repository }}] release ${{ github.event.client_payload.tag_name }}
