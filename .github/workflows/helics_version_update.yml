@@ -1,0 +1,13 @@
+name: HELICS Version Update
+
+on: [repository_dispatch]
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'helics-version-update'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update the HELICS_VERSION file
+      run: |
+        echo Received notification of new HELICS (repo: ${{ github.event.client_payload.repository }}) release ${{ github.event.client_payload.tag_name }}
