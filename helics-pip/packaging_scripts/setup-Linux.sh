@@ -26,6 +26,6 @@ CMAKE_PREFIX_PATH="${PWD}/helics"
 export CMAKE_PREFIX_PATH
 
 # Add a copy of HELICS to the bundled folder for building the Python wheel
-mkdir -p pip/bundled/helics
+mkdir -p helics-pip/bundled/helics
 curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-v${HELICS_VERSION}-source.tar.gz" || exit $?
-tar xzf Helics-*.tar.gz -C pip/bundled/helics/ && rm Helics-*.tar.gz || exit $?
+tar xzf Helics-*.tar.gz -C helics-pip/bundled/helics/ && rm Helics-*.tar.gz || exit $?

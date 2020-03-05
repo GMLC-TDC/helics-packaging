@@ -2,7 +2,7 @@
 
 export CMAKE_PREFIX_PATH
 
-pushd pip || exit $?
+pushd helics-pip || exit $?
 OLD_PATH=$PATH
 for PYDIR in "${RUNNER_TOOL_CACHE}"/Python/3*/x64; do
   pythonLocation="${PYDIR}"
@@ -15,6 +15,7 @@ for PYDIR in "${RUNNER_TOOL_CACHE}"/Python/3*/x64; do
   python setup.py bdist_wheel --dist-dir=../wheelhouse
 done
 
+# Swig is already installed on macOS
 brew install swig
 for PYDIR in "${RUNNER_TOOL_CACHE}"/Python/2*/x64; do
   pythonLocation="${PYDIR}"
