@@ -90,55 +90,11 @@ jobs:
             winarch: win32
     steps:
     - uses: actions/checkout@v2
-    - name: Setup build directory
-      run: source ./pip/packaging_scripts/setup-Windows.sh "$(cat HELICS_VERSION)" "${{ matrix.winarch }}"
-      shell: bash
-    - uses: actions/setup-python@v1
-      name: Setup Python 3.5
-      with: 
-        python-version: '3.5'
-        architecture: ${{ matrix.arch }}
-    - name: Create wheel
-      run: ./pip/packaging_scripts/build-Windows.sh
-      shell: bash
-    - uses: actions/setup-python@v1
-      name: Setup Python 3.6
-      with: 
-        python-version: '3.6'
-        architecture: ${{ matrix.arch }}
-    - name: Create wheel
-      run: ./pip/packaging_scripts/build-Windows.sh
-      shell: bash
-    - uses: actions/setup-python@v1
-      name: Setup Python 3.7
-      with: 
-        python-version: '3.7'
-        architecture: ${{ matrix.arch }}
-    - name: Create wheel
-      run: ./pip/packaging_scripts/build-Windows.sh
-      shell: bash
-    - uses: actions/setup-python@v1
-      name: Setup Python 3.8
-      with: 
-        python-version: '3.8'
-        architecture: ${{ matrix.arch }}
-    - name: Create wheel
-      run: ./pip/packaging_scripts/build-Windows.sh
-      shell: bash
-      
-    - uses: actions/setup-python@v1
-      name: Setup Python 2.7
-      with: 
-        python-version: '2.7'
-        architecture: ${{ matrix.arch }}
-    - name: Create wheel
-      run: choco install -y swig && ./pip/packaging_scripts/build-Windows.sh
-      shell: bash
-
-    - name: Repair wheels
-      run: ./pip/packaging_scripts/repair-Windows.sh
-      shell: bash
-
+    - name: Create wheels
+      run: |
+        source ./pip/packaging_scripts/setup-Windows.sh "$(cat HELICS_VERSION)" "${{ matrix.winarch }}"
+        ./pip/packaging_scripts/build-Windows.sh "${{ matrix.arch }}"
+        ./pip/packaging_scripts/repair-Windows.sh
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
