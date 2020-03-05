@@ -7,6 +7,7 @@ on:
     # Run this for a push only if one of the Python packages has changes
     paths: 
       - '*-pip/**'
+      - '.github/workflows/pythonpackage.yml'
 
 # NOTE: These jobs *must* use actions/checkout@v1 for full history,
 # or run git fetch --prune --unshallow for versioning to work
