@@ -15,5 +15,7 @@ tar xzf Helics-*.tar.gz -C pip/bundled/helics/ && rm Helics-*.tar.gz || exit $?
 mkdir wheelhouse
 
 # Set the CMAKE_PREFIX_PATH environment variable in GitHub Actions
+CMAKE_PREFIX_PATH="${PWD}/helics"
+export CMAKE_PREFIX_PATH
 echo "::set-env name=CMAKE_PREFIX_PATH::${PWD}/helics"
 
