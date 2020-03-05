@@ -12,8 +12,12 @@ curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSI
 tar xzf Helics-*.tar.gz -C pip/bundled/helics/ && rm Helics-*.tar.gz || exit $?
 
 # Set the CMAKE_PREFIX_PATH environment variable in GitHub Actions
+CMAKE_PREFIX_PATH="${PWD}/helics"
+export CMAKE_PREFIX_PATH
 echo "::set-env name=CMAKE_PREFIX_PATH::${PWD}/helics"
 
 # Set the DYLD_LIBRARY_PATH in GitHub Actions so delocate can fix up the wheels
+DYLD_LIBRARY_PATH="${PWD}/helics/lib:${PWD}/helics/lib64:$DYLD_LIBRARY_PATH"
+export DYLD_LIBRARY_PATH
 echo "::set-env name=DYLD_LIBRARY_PATH::$PWD/helics/lib:$PWD/helics/lib64:$DYLD_LIBRARY_PATH"
 
