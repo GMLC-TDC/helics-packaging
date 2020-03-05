@@ -13,9 +13,9 @@ done
 for whl in $PWD/wheelhouse/*.whl; do
   mkdir tmp_dir
   pushd tmp_dir
-  wheel unpack "$whl"
+  python -m wheel unpack "$whl"
   #cp ../helics/bin/libzmq*.dll helics-*/helics
-  wheel pack helics-*/ --dest-dir=../wheelhouse/fixed-wheels
+  python -m wheel pack helics-*/ --dest-dir=../wheelhouse/fixed-wheels
   popd
   rm -rf tmp_dir
 done
