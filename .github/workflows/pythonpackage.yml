@@ -95,6 +95,7 @@ jobs:
         source ./pip/packaging_scripts/setup-Windows.sh "$(cat HELICS_VERSION)" "${{ matrix.winarch }}"
         ./pip/packaging_scripts/build-Windows.sh "${{ matrix.arch }}"
         ./pip/packaging_scripts/repair-Windows.sh
+      shell: bash
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
