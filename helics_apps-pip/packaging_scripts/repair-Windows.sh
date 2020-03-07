@@ -1,8 +1,6 @@
 #!/bin/bash
 
-pushd wheelhouse
 mkdir upload-wheelhouse
-popd
 
 # Install wheel module for fixing up the wheels
 python -m pip install --upgrade pip
