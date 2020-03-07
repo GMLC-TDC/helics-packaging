@@ -4,11 +4,6 @@ pushd wheelhouse
 mkdir fixed-wheels
 popd
 
-# Get rid of second post in .post?.post. tag
-for whl in wheelhouse/*.post*.post.*.whl; do
-    mv "$whl" "${whl//\.post\./.}"
-done
-
 # Install wheel module for fixing up the wheels
 python -m pip install --upgrade pip
 python -m pip install wheel
