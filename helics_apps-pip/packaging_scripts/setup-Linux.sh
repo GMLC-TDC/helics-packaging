@@ -16,3 +16,5 @@ export LD_LIBRARY_PATH
 # Make sure pip and required tools are set up
 pip install --upgrade pip
 pip install setuptools wheel auditwheel
+
+sudo apt-get install -y patchelf
