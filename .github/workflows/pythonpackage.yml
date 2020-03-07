@@ -90,11 +90,10 @@ jobs:
         path: helics-pip/dist
 
   build-helics_apps-linux:
+    # No container needed, since the package is version agnostic
     runs-on: ubuntu-latest
-    container: quay.io/pypa/manylinux2010_x86_64
     steps:
-    # The manylinux2010 container only works with actions/checkout@v1
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Create wheels
       run: |
         source ./helics_apps-pip/packaging_scripts/setup-Linux.sh "$(cat HELICS_VERSION)"
