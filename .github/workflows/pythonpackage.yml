@@ -156,7 +156,7 @@ jobs:
       uses: pypa/gh-action-pypi-publish@master
       with:
         user: __token__
-        password: ${{ secrets.test_pypi_password }}
+        password: ${{ secrets.test_pypi_helics_apps_password }}
         repository_url: https://test.pypi.org/legacy/
 
     - name: Publish package to PyPI
@@ -164,4 +164,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@master
       with:
         user: __token__
-        password: ${{ secrets.pypi_password }}
+        password: ${{ secrets.pypi_helics_apps_password }}
