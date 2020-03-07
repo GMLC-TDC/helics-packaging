@@ -39,6 +39,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=['helics_apps'],
     package_data={'helics_apps': ['data/*']},
+    include_package_data=True,
     cmdclass=versioneer.get_cmdclass(),
     entry_points={
         'console_scripts': [
