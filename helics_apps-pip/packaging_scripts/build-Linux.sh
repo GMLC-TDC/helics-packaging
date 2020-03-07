@@ -2,6 +2,6 @@
 
 # Create the wheel
 pushd helics_apps-pip || exit $?
-python setup.py bdist_wheel --dist-dir=../wheelhouse
+/opt/python/cp37-cp37m/bin/python setup.py bdist_wheel --dist-dir=../wheelhouse
 popd || exit $?
 
