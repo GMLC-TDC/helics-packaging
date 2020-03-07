@@ -4,4 +4,3 @@
 pushd helics_apps-pip || exit $?
 python setup.py bdist_wheel --dist-dir=../wheelhouse
 popd || exit $?
-

@@ -89,9 +89,25 @@ jobs:
         name: python-dist
         path: helics-pip/dist
 
-  build-helics_apps-linux:
+  build-helics_apps:
     # No container needed, since the package is version agnostic
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        id: [linux, macos, win32, win64]
+        include:
+          - id: linux
+            os: ubuntu-latest
+          - id: macos
+            os: macos-latest
+          - id: win32
+            os: windows-latest
+            arch: win32
+            plat_name: win32
+          - id: win64
+            os: windows-latest
+            arch: win64
+            plat_name: win_amd64
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
@@ -100,13 +116,13 @@ jobs:
         architecture: 'x64'
     - name: Create wheel
       run: |
-        source ./helics_apps-pip/packaging_scripts/setup-Linux.sh "$(cat HELICS_VERSION)"
-        ./helics_apps-pip/packaging_scripts/build-Linux.sh
-        ./helics_apps-pip/packaging_scripts/repair-Linux.sh
+        source ./helics_apps-pip/packaging_scripts/setup-${{ runner.os  }}.sh "$(cat HELICS_VERSION)" "${{ matrix.arch }}"
+        ./helics_apps-pip/packaging_scripts/build-${{ runner.os }}.sh "${{ matrix.plat_name }}"
+        ./helics_apps-pip/packaging_scripts/repair-${{ runner.os }}.sh
     - uses: actions/upload-artifact@v1
       with:
         name: apps-python-dist
-        path: wheelhouse/manylinux2010
+        path: upload-wheelhouse
 
   publish-helics:
     needs: [build-helics-sdist, build-helics-linux, build-helics-macos, build-helics-windows]
@@ -141,7 +157,7 @@ jobs:
         password: ${{ secrets.pypi_password }}
 
   publish-helics_apps:
-    needs: [build-helics_apps-linux]
+    needs: [build-helics_apps]
     runs-on: ubuntu-latest
     if: github.event.action == 'published' || endsWith(github.ref, 'master')
     steps:
