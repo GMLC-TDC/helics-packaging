@@ -10,22 +10,9 @@ setup_py_dir = os.path.abspath(os.path.dirname(__file__))
 # Get the README.md contents
 README_contents = io.open(os.path.join(setup_py_dir, 'README.md'), encoding="utf-8").read()
 
-# Use versioneer to get the version tag
-PKG_VERSION = versioneer.get_version()
-
-# Try getting a version from PKG-INFO if this is a build from an sdist package
-if PKG_VERSION == "0+unknown":
-    try:
-        with open(os.path.join(setup_py_dir, 'PKG-INFO')) as f:
-            for line in f:
-                if line.startswith("Version:"):
-                    PKG_VERSION=line[8:].strip()
-    except IOError:
-        print("Unable to get a package version, using 0+unknown")
-
 setup(
     name='helics_apps',
-    version=PKG_VERSION,
+    version=versioneer.get_version(),
     author='GMLC-TDC',
     author_email='helicsdevelopers@helics.org',
     maintainer='',
