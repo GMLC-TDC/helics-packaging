@@ -111,6 +111,7 @@ jobs:
             plat_name: win_amd64
     steps:
     - uses: actions/checkout@v2
+    - run: git fetch --prune --unshallow
     - uses: actions/setup-python@v1
       with:
         python-version: '3.x'
