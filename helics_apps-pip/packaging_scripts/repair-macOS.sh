@@ -11,9 +11,3 @@ pip install delocate wheel
 for whl in wheelhouse/*.whl; do
   delocate-wheel -v "$whl" -w upload-wheelhouse
 done
-
-# Set the macOS version to match the SDK built with, and work with system/Python.org installs
-# See https://github.com/MacPython/wiki/wiki/Spinning-wheels#lying-about-your-wheel-compability
-for f in wheelhouse/fixed-wheels/*-macosx_10_13_x86_64.whl; do
-  mv "$f" "${f%_10_13_x86_64.whl}_10_9_intel.whl"
-done

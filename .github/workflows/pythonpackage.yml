@@ -100,6 +100,7 @@ jobs:
             os: ubuntu-latest
           - id: macos
             os: macos-latest
+            plat_name: macosx_10_9_intel
           - id: win32
             os: windows-latest
             arch: win32
