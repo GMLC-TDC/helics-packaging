@@ -102,6 +102,10 @@ jobs:
         ./helics_apps-pip/packaging_scripts/repair-Linux.sh
     - uses: actions/upload-artifact@v1
       with:
+        name: all-the-stuff
+        path: helics_apps-pip
+    - uses: actions/upload-artifact@v1
+      with:
         name: apps-python-dist
         path: wheelhouse/manylinux2010
 
