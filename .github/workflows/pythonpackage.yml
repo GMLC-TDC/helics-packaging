@@ -12,7 +12,7 @@ on:
 # NOTE: These jobs *must* use actions/checkout@v1 for full history,
 # or run git fetch --prune --unshallow for versioning to work
 jobs:
-  build-linux:
+  build-helics-linux:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2010_x86_64
     steps:
@@ -28,7 +28,7 @@ jobs:
         name: python-dist
         path: wheelhouse/manylinux2010
 
-  build-macos:
+  build-helics-macos:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
@@ -47,7 +47,7 @@ jobs:
         name: python-dist
         path: wheelhouse/fixed-wheels
 
-  build-windows:
+  build-helics-windows:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -71,7 +71,7 @@ jobs:
         name: python-dist
         path: wheelhouse/fixed-wheels/
 
-  build-sdist:
+  build-helics-sdist:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -89,8 +89,24 @@ jobs:
         name: python-dist
         path: helics-pip/dist
 
-  publish:
-    needs: [build-sdist, build-linux, build-macos, build-windows]
+  build-helics_apps-linux:
+    runs-on: ubuntu-latest
+    container: quay.io/pypa/manylinux2010_x86_64
+    steps:
+    # The manylinux2010 container only works with actions/checkout@v1
+    - uses: actions/checkout@v1
+    - name: Create wheels
+      run: |
+        source ./helics_apps-pip/packaging_scripts/setup-Linux.sh "$(cat HELICS_VERSION)"
+        ./helics_apps-pip/packaging_scripts/build-Linux.sh
+        ./helics_apps-pip/packaging_scripts/repair-Linux.sh
+    - uses: actions/upload-artifact@v1
+      with:
+        name: apps-python-dist
+        path: wheelhouse/manylinux2010
+
+  publish-helics:
+    needs: [build-helics-sdist, build-helics-linux, build-helics-macos, build-helics-windows]
     runs-on: ubuntu-latest
     if: github.event.action == 'published' || endsWith(github.ref, 'master')
     steps:
@@ -105,6 +121,32 @@ jobs:
 #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        UPLOAD_URL: ${{ github.event.release.upload_url }}
 #      run: for filename in dist/*; do ./.github/workflows/upload-release-asset.sh "${filename}"; done
+
+    - name: Publish package to TestPyPI
+      if: endsWith(github.ref, 'master')
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: __token__
+        password: ${{ secrets.test_pypi_password }}
+        repository_url: https://test.pypi.org/legacy/
+
+    - name: Publish package to PyPI
+      if: github.event.action == 'published'
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: __token__
+        password: ${{ secrets.pypi_password }}
+
+  publish-helics_apps:
+    needs: [build-helics_apps-linux]
+    runs-on: ubuntu-latest
+    if: github.event.action == 'published' || endsWith(github.ref, 'master')
+    steps:
+    - name: Get the built packages
+      uses: actions/download-artifact@v1
+      with:
+        name: apps-python-dist
+        path: dist
 
     - name: Publish package to TestPyPI
       if: endsWith(github.ref, 'master')
