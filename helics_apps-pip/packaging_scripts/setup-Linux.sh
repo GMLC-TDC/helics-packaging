@@ -9,12 +9,6 @@ tar xzf Helics-*.tar.gz && rm Helics-*.tar.gz && mv Helics-* helics || exit $?
 # Add a copy of HELICS binaries to the data folder
 cp helics/bin/helics_* helics_apps-pip/helics_apps/data/bin/
 
-echo "helics subfolder:"
-ls helics
-
-echo "helics_apps-pip/helics_apps/data/bin subfolder:"
-ls helics_apps-pip/helics_apps/data/bin
-
 # Add lib64 to LD_LIBRARY_PATH so auditwheel can fix up the bdist wheel
 LD_LIBRARY_PATH="$PWD/helics/lib64:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH
