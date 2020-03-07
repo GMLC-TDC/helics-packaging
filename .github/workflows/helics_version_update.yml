@@ -11,4 +11,6 @@ jobs:
     - name: Update the HELICS_VERSION file to ${{ github.event.client_payload.version }}
       run: echo "${{ github.event.client_payload.version }}" > HELICS_VERSION
     - name: Commit updated HELICS_VERSION file
-      run: git diff
+      run: git add HELICS_VERSION && commit -m "Update HELICS version to ${{ github.event.client_payload.version }}"
+    - name: Push updated HELICS_VERSION
+      run: git push
