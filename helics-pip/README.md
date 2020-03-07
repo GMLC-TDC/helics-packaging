@@ -1,7 +1,8 @@
 # HELICS Python Interface
 [HELICS](https://github.com/GMLC-TDC/HELICS) is a cross-platform co-simulation framework that enables multiple
 simulation tools to exchange data and stay synchronized in time to create larger simulations. This is the Python
-wrapper for the C API provided by HELICS.
+wrapper for the C API provided by HELICS. If you're looking for the HELICS apps, see the [helics_apps](https://pypi.org/project/helics_apps/)
+pip package.
 
 ## Installation
 As a general recommendation if you are on an older system or version of Python, it is probably a good idea to
@@ -21,7 +22,8 @@ This package provides pre-compiled binary wheels for the following CPython versi
 
 Each of the binary wheels for the above platforms includes a copy of the helics C shared library. For other
 HELICS apps such as the broker, the HELICS project provides pre-compiled copies of those apps for 64-bit
-macOS and Windows systems.
+macOS and Windows systems on the [GitHub Releases page](https://github.com/GMLC-TDC/HELICS/releases) and in
+a pip package called [helics_apps](https://https://pypi.org/project/helics_apps/)
 
 ### Source distributions
 In addition, a source distribution is provided to build a copy of the Python interface from source. You will
