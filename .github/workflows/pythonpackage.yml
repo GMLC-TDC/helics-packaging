@@ -115,6 +115,7 @@ jobs:
         python-version: '3.x'
         architecture: 'x64'
     - name: Create wheel
+      shell: bash
       run: |
         source ./helics_apps-pip/packaging_scripts/setup-${{ runner.os  }}.sh "$(cat HELICS_VERSION)" "${{ matrix.arch }}"
         ./helics_apps-pip/packaging_scripts/build-${{ runner.os }}.sh "${{ matrix.plat_name }}"
