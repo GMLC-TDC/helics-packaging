@@ -14,7 +14,7 @@ for whl in $PWD/wheelhouse/*.whl; do
   pushd tmp_dir
   wheel unpack "$whl"
   #cp ../helics/bin/libzmq*.dll helics-*/helics
-  wheel pack helics-*/ --dest-dir=../upload-wheelhouse
+  wheel pack helics_apps-*/ --dest-dir=../upload-wheelhouse
   popd
   rm -rf tmp_dir
 done
