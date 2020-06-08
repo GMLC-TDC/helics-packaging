@@ -25,6 +25,10 @@ jobs:
         ./helics-pip/packaging_scripts/repair-Linux.sh
     - uses: actions/upload-artifact@v1
       with:
+        name: linux-python-dist
+        path: wheelhouse/manylinux2010
+    - uses: actions/upload-artifact@v1
+      with:
         name: python-dist
         path: wheelhouse/manylinux2010
 
