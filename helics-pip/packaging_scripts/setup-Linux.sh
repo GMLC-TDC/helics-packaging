@@ -29,3 +29,6 @@ export CMAKE_PREFIX_PATH
 mkdir -p helics-pip/bundled/helics
 curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-v${HELICS_VERSION}-source.tar.gz" || exit $?
 tar xzf Helics-*.tar.gz -C helics-pip/bundled/helics/ && rm Helics-*.tar.gz || exit $?
+
+# Copy any patched files to the HELICS source tree if they exist
+cp -r helics-pip/patches/${HELICS_VERSION/* helics-pip/bundled/helics/ || true
