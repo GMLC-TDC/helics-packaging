@@ -34,7 +34,7 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: linux-python-dist
-        path: wheelhouse/manylinux2010
+        path: wheelhouse
     - uses: actions/upload-artifact@v1
       with:
         name: python-dist
