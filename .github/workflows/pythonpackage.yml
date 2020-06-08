@@ -23,6 +23,14 @@ jobs:
         source ./helics-pip/packaging_scripts/setup-Linux.sh "$(cat HELICS_VERSION)"
         ./helics-pip/packaging_scripts/build-Linux.sh
         ./helics-pip/packaging_scripts/repair-Linux.sh
+    - name: Check directories for files
+      run: |
+        echo "---$PWD---"
+        ls
+        echo "---$PWD/wheelhouse---"
+        ls wheelhouse
+        echo "---$PWD/wheelhouse/manylinux2010---"
+        ls wheelhouse/manylinux2010
     - uses: actions/upload-artifact@v1
       with:
         name: linux-python-dist
