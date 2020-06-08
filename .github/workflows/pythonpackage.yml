@@ -14,7 +14,7 @@ on:
 jobs:
   build-helics-linux:
     runs-on: ubuntu-latest
-    container: quay.io/pypa/manylinux2010_x86_64:2020-04-25-bdd9229
+    container: quay.io/pypa/manylinux2010_x86_64:2020-04-25-183680f
     steps:
     # The manylinux2010 container only works with actions/checkout@v1
     - uses: actions/checkout@v1
