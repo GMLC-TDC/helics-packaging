@@ -31,4 +31,4 @@ curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSI
 tar xzf Helics-*.tar.gz -C helics-pip/bundled/helics/ && rm Helics-*.tar.gz || exit $?
 
 # Copy any patched files to the HELICS source tree if they exist
-cp -r helics-pip/patches/${HELICS_VERSION/* helics-pip/bundled/helics/ || true
+cp -r helics-pip/patches/${HELICS_VERSION}/* helics-pip/bundled/helics/ || true
