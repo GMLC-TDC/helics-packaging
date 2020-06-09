@@ -19,3 +19,5 @@ CMAKE_PREFIX_PATH="${PWD}/helics"
 export CMAKE_PREFIX_PATH
 echo "::set-env name=CMAKE_PREFIX_PATH::${PWD}/helics"
 
+# Copy any patched files to the HELICS source tree if they exist
+cp -r helics-pip/patches/${HELICS_VERSION}/* helics-pip/bundled/helics/ || true
