@@ -21,3 +21,5 @@ DYLD_LIBRARY_PATH="${PWD}/helics/lib:${PWD}/helics/lib64:$DYLD_LIBRARY_PATH"
 export DYLD_LIBRARY_PATH
 echo "::set-env name=DYLD_LIBRARY_PATH::$PWD/helics/lib:$PWD/helics/lib64:$DYLD_LIBRARY_PATH"
 
+# Copy any patched files to the HELICS source tree if they exist
+cp -r helics-pip/patches/${HELICS_VERSION}/* helics-pip/bundled/helics/ || true
