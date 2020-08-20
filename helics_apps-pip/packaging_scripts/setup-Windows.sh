@@ -11,8 +11,8 @@ unzip Helics-*.zip && rm Helics-*.zip && mv Helics-* helics || exit $?
 cp helics/bin/helics_* helics_apps-pip/helics_apps/data/bin/
 
 # Make sure pip and required tools are set up
-pip install --upgrade pip
-pip install setuptools wheel
+pip install --user --upgrade pip
+pip install --user setuptools wheel
 
 mkdir wheelhouse
 
