@@ -135,6 +135,8 @@ if PKG_VERSION == "0+unknown":
     except IOError:
         print("Unable to get a package version, using 0+unknown")
 
+cmdclass = versioneer.get_cmdclass()
+cmdclass['build_ext'] = HelicsBuild
 setup(
     name='helics',
     version=PKG_VERSION,
@@ -151,10 +153,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=['helics'],
     ext_modules=[HelicsExtension('helics', sourcedir='bundled/helics/interfaces/python')],
-    cmdclass={
-        'build_ext': HelicsBuild,
-        'versioneer': versioneer.get_cmdclass()
-    },
+    cmdclass=cmdclass,
     entry_points={
         'console_scripts': [
         ]
