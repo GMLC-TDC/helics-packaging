@@ -1,6 +1,7 @@
 name: Build Python Packages
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["HELICS Version Update"]
     branches: [main]
