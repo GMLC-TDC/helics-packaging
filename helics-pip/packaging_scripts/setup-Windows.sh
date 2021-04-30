@@ -17,7 +17,7 @@ mkdir wheelhouse
 # Set the CMAKE_PREFIX_PATH environment variable in GitHub Actions
 CMAKE_PREFIX_PATH="${PWD}/helics"
 export CMAKE_PREFIX_PATH
-echo "::set-env name=CMAKE_PREFIX_PATH::${PWD}/helics"
+echo "CMAKE_PREFIX_PATH=${PWD}/helics" >> $GITHUB_ENV
 
 # Copy any patched files to the HELICS source tree if they exist
 cp -r helics-pip/patches/${HELICS_VERSION}/* helics-pip/bundled/helics/ || true

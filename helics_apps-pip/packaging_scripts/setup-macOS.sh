@@ -16,5 +16,5 @@ pip install setuptools wheel
 # Set the DYLD_LIBRARY_PATH in GitHub Actions so delocate can fix up the wheel
 DYLD_LIBRARY_PATH="${PWD}/helics/lib:${PWD}/helics/lib64:$DYLD_LIBRARY_PATH"
 export DYLD_LIBRARY_PATH
-echo "::set-env name=DYLD_LIBRARY_PATH::$PWD/helics/lib:$PWD/helics/lib64:$DYLD_LIBRARY_PATH"
+echo "DYLD_LIBRARY_PATH=$PWD/helics/lib:$PWD/helics/lib64:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV
 

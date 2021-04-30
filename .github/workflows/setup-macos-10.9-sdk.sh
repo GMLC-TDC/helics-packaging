@@ -15,4 +15,4 @@ tar -xf "MacOSX${SDK_VER}.sdk.tar.xz" -C "${XCODE_MACOS_SDK_PATH}"
 /usr/libexec/PlistBuddy -c "Set :MinimumSDKVersion ${SDK_VER}" "${XCODE_MACOS_PLATFORM_PATH}/Info.plist"
 
 # Set MACOSX_DEPLOYMENT_TARGET on GitHub Actions
-echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::${SDK_VER}"
+echo "MACOSX_DEPLOYMENT_TARGET=${SDK_VER}" >> $GITHUB_ENV
