@@ -46,10 +46,16 @@ class HELICSCMakeBuild(build_ext):
             self.build_extension(ext)
 
     def build_extension(self, ext):
+
         self.helics_url = DOWNLOAD_URL
         self.helics_source = HELICS_SOURCE
+
+        if os.path.exists(HELICS_INSTALL) and sum(len(files) for _, _, files in os.walk(HELICS_INSTALL)) <= 2:
+            return
+
         print("Opening ", self.helics_url)
         r = urlopen(self.helics_url)
+
         if r.getcode() == 200:
             content = io.BytesIO(r.read())
             content.seek(0)
@@ -66,6 +72,8 @@ class HELICSCMakeBuild(build_ext):
         cmake_args = [
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}".format(extdir),
             "-DHELICS_DISABLE_GIT_OPERATIONS=OFF",
+            "-DHELICS_ZMQ_SUBPROJECT=ON",
+            "-DHELICS_ZMQ_FORCE_SUBPROJECT=ON",
             "-DCMAKE_BUILD_TYPE=Release",
             "-DCMAKE_INSTALL_PREFIX={}".format(HELICS_INSTALL),
         ]
