@@ -25,8 +25,9 @@ README_contents = io.open(os.path.join(setup_py_dir, "README.md"), encoding="utf
 
 HELICS_SOURCE = os.path.join(setup_py_dir, "./_source")
 HELICS_VERSION = versioneer.get_version()
+HELICS_VERSION = re.findall(r"(?:(\d+\.(?:\d+\.)*\d+))", HELICS_VERSION)[0]
 HELICS_INSTALL = os.path.join(setup_py_dir, "./helics_apps/data")
-DOWNLOAD_URL = "https://github.com/GMLC-TDC/HELICS/releases/download/{version}/Helics-{version}-source.tar.gz".format(version=HELICS_VERSION)
+DOWNLOAD_URL = "https://github.com/GMLC-TDC/HELICS/releases/download/v{version}/Helics-v{version}-source.tar.gz".format(version=HELICS_VERSION)
 
 
 class HELICSCMakeBuild(build_ext):
@@ -47,6 +48,7 @@ class HELICSCMakeBuild(build_ext):
     def build_extension(self, ext):
         self.helics_url = DOWNLOAD_URL
         self.helics_source = HELICS_SOURCE
+        print("Opening ", self.helics_url)
         r = urlopen(self.helics_url)
         if r.getcode() == 200:
             content = io.BytesIO(r.read())
