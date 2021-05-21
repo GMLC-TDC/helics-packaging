@@ -50,7 +50,7 @@ class HELICSCMakeBuild(build_ext):
         self.helics_url = DOWNLOAD_URL
         self.helics_source = HELICS_SOURCE
 
-        if os.path.exists(HELICS_INSTALL) and sum(len(files) for _, _, files in os.walk(HELICS_INSTALL)) <= 2:
+        if os.path.exists(HELICS_INSTALL) and sum(len(files) for _, _, files in os.walk(HELICS_INSTALL)) > 2:
             return
 
         print("Opening ", self.helics_url)
