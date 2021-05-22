@@ -11,6 +11,7 @@ import re
 import tarfile
 import platform
 import shlex
+from wheel.bdist_wheel import bdist_wheel
 
 try:
     from urllib2 import urlopen
@@ -28,6 +29,12 @@ HELICS_VERSION = versioneer.get_version()
 HELICS_VERSION = re.findall(r"(?:(\d+\.(?:\d+\.)*\d+))", HELICS_VERSION)[0]
 HELICS_INSTALL = os.path.join(setup_py_dir, "./helics_apps/data")
 DOWNLOAD_URL = "https://github.com/GMLC-TDC/HELICS/releases/download/v{version}/Helics-v{version}-source.tar.gz".format(version=HELICS_VERSION)
+
+
+class HELICSBdistWheel(bdist_wheel):
+    def get_tag(self):
+        rv = super().get_tag()
+        return ("py2.py3", "none",) + rv[2:]
 
 
 class HELICSCMakeBuild(build_ext):
@@ -105,7 +112,8 @@ class CMakeExtension(Extension):
         self.sourcedir = sourcedir
 
 
-cmdclass = {"build_ext": HELICSCMakeBuild}
+cmdclass = {"build_ext": HELICSCMakeBuild, "bdist_wheel": HELICSBdistWheel}
+
 
 for k, v in versioneer.get_cmdclass().items():
     cmdclass[k] = v
