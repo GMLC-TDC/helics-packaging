@@ -60,7 +60,7 @@ class HELICSCMakeBuild(build_ext):
         if os.path.exists(HELICS_INSTALL) and sum(len(files) for _, _, files in os.walk(HELICS_INSTALL)) > 2:
             return
 
-        print("Opening ", self.helics_url)
+        print("Opening", self.helics_url)
         r = urlopen(self.helics_url)
 
         if r.getcode() == 200:
