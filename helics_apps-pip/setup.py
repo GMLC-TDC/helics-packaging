@@ -26,7 +26,6 @@ README_contents = io.open(os.path.join(setup_py_dir, "README.md"), encoding="utf
 
 HELICS_SOURCE = os.path.join(setup_py_dir, "./_source")
 HELICS_VERSION = versioneer.get_version()
-print(HELICS_VERSION)
 HELICS_VERSION = re.findall(r"(?:(\d+\.(?:\d+\.)*\d+))", HELICS_VERSION)[0]
 HELICS_INSTALL = os.path.join(setup_py_dir, "./helics_apps/data")
 DOWNLOAD_URL = "https://github.com/GMLC-TDC/HELICS/releases/download/v{version}/Helics-v{version}-source.tar.gz".format(version=HELICS_VERSION)
