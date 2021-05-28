@@ -72,30 +72,32 @@ class HELICSCMakeBuild(build_ext):
             return
 
         extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+        extdir = os.path.join(extdir, "helics_apps", "data")
         # required for auto - detection of auxiliary "native" libs
         if not extdir.endswith(os.path.sep):
             extdir += os.path.sep
 
         cmake_args = [
-            "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}".format(extdir),
             "-DHELICS_DISABLE_GIT_OPERATIONS=OFF",
             "-DHELICS_ZMQ_SUBPROJECT=ON",
             "-DHELICS_ZMQ_FORCE_SUBPROJECT=ON",
             "-DCMAKE_BUILD_TYPE=Release",
-            "-DCMAKE_INSTALL_PREFIX={}".format(HELICS_INSTALL),
+            "-DCMAKE_INSTALL_PREFIX={}".format(extdir),
+            # "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY={}".format(os.path.join(extdir, "bin")),
+            # "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}".format(os.path.join(extdir, "lib")),
         ]
 
         cfg = "Debug" if self.debug else "Release"
         build_args = ["--config", cfg]
 
         if platform.system() == "Windows":
-            cmake_args += ["-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}".format(cfg.upper(), extdir)]
+            cmake_args += ["-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_{}={}".format(cfg.upper(), extdir)]
             if sys.maxsize > 2 ** 32:
                 cmake_args += ["-A", "x64"]
                 build_args += ["--", "/m"]
         else:
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
-            build_args += ["--", "-j8"]
+            build_args += ["--", "-j"]
 
         env = os.environ.copy()
         if not os.path.exists(self.build_temp):
