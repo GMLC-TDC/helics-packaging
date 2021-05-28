@@ -5,108 +5,19 @@ on:
   workflow_run:
     workflows: ["HELICS Version Update"]
     branches: [main]
-    types: 
+    types:
       - completed
   release:
     types: published
   push:
     # Run this for a push only if one of the Python packages has changes
-    paths: 
+    paths:
       - '*-pip/**'
       - '.github/workflows/pythonpackage.yml'
 
 # NOTE: These jobs *must* use actions/checkout@v1 for full history,
 # or run git fetch --prune --unshallow for versioning to work
 jobs:
-#   build-helics-linux:
-#     runs-on: ubuntu-latest
-#     container: quay.io/pypa/manylinux2010_x86_64:latest
-#     steps:
-#     # The manylinux2010 container only works with actions/checkout@v1
-#     - uses: actions/checkout@v1
-#     - name: Create wheels
-#       run: |
-#         source ./helics-pip/packaging_scripts/setup-Linux.sh "$(cat HELICS_VERSION)"
-#         ./helics-pip/packaging_scripts/build-Linux.sh
-#         ./helics-pip/packaging_scripts/repair-Linux.sh
-#     - name: Check directories for files
-#       run: |
-#         echo "---$PWD---"
-#         ls
-#         echo "---$PWD/wheelhouse---"
-#         ls wheelhouse
-#         echo "---$PWD/wheelhouse/manylinux2010---"
-#         ls wheelhouse/manylinux2010
-#     - uses: actions/upload-artifact@v1
-#       with:
-#         name: linux-python-dist
-#         path: wheelhouse
-#     - uses: actions/upload-artifact@v1
-#       with:
-#         name: python-dist
-#         path: wheelhouse/manylinux2010
-
-#   build-helics-macos:
-#     runs-on: macos-latest
-#     steps:
-#     - uses: actions/checkout@v2
-#     - run: git fetch --prune --unshallow
-#     - name: Setup macOS SDK
-#       if: runner.os == 'macOS'
-#       run: ./.github/workflows/setup-macos-10.9-sdk.sh
-#     - name: Create wheels
-#       run: |
-#         source ./helics-pip/packaging_scripts/setup-macOS.sh "$(cat HELICS_VERSION)"
-#         ./helics-pip/packaging_scripts/build-macOS.sh
-#         ./helics-pip/packaging_scripts/repair-macOS.sh
-#       shell: bash
-#     - uses: actions/upload-artifact@v1
-#       with:
-#         name: python-dist
-#         path: wheelhouse/fixed-wheels
-
-#   build-helics-windows:
-#     runs-on: windows-latest
-#     strategy:
-#       matrix:
-#         arch: [x64, x86]
-#         include:
-#           - arch: x64
-#             winarch: win64
-#           - arch: x86
-#             winarch: win32
-#     steps:
-#     - uses: actions/checkout@v2
-#     - run: git fetch --prune --unshallow
-#     - name: Create wheels
-#       run: |
-#         source ./helics-pip/packaging_scripts/setup-Windows.sh "$(cat HELICS_VERSION)" "${{ matrix.winarch }}"
-#         ./helics-pip/packaging_scripts/build-Windows.sh "${{ matrix.arch }}"
-#         ./helics-pip/packaging_scripts/repair-Windows.sh
-#       shell: bash
-#     - uses: actions/upload-artifact@v1
-#       with:
-#         name: python-dist
-#         path: wheelhouse/fixed-wheels/
-
-#   build-helics-sdist:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v2
-#     - run: git fetch --prune --unshallow
-#     - name: Build source distribution
-#       run: |
-#         HELICS_VERSION=$(cat HELICS_VERSION)
-#         mkdir -p helics-pip/bundled/helics
-#         curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-v${HELICS_VERSION}-source.tar.gz" || exit $?
-#         tar xzf Helics-*.tar.gz -C helics-pip/bundled/helics/ && rm Helics-*.tar.gz || exit $?
-#         cd helics-pip || exit $?
-#         python setup.py sdist
-#     - uses: actions/upload-artifact@v1
-#       with:
-#         name: python-dist
-#         path: helics-pip/dist
-
   build-helics_apps:
     # No container needed, since the package is version agnostic
     runs-on: ${{ matrix.os }}
@@ -145,40 +56,33 @@ jobs:
         name: apps-python-dist
         path: upload-wheelhouse
 
-#   publish-helics:
-#     needs: [build-helics-sdist, build-helics-linux, build-helics-macos, build-helics-windows]
-#     runs-on: ubuntu-latest
-#     if: github.event.action == 'published' || endsWith(github.ref, 'master')
-#     steps:
-#     - name: Get the built packages
-#       uses: actions/download-artifact@v1
-#       with:
-#         name: python-dist
-#         path: dist
+  build-helics_apps-sdist:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: git fetch --prune --unshallow
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
 
-# #    - name: Upload artifacts to GitHub Release
-# #      env:
-# #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# #        UPLOAD_URL: ${{ github.event.release.upload_url }}
-# #      run: for filename in dist/*; do ./.github/workflows/upload-release-asset.sh "${filename}"; done
+    - name: Install dependencies
+      run: |
+        python -m pip install -U pip install wheel setuptools cffi
 
-#     - name: Publish package to TestPyPI
-#       if: endsWith(github.ref, 'master')
-#       uses: pypa/gh-action-pypi-publish@master
-#       with:
-#         user: __token__
-#         password: ${{ secrets.test_pypi_password }}
-#         repository_url: https://test.pypi.org/legacy/
+    - name: Build sdist
+      run: |
+        cd ./helics_apps-pip
+        python setup.py sdist
 
-#     - name: Publish package to PyPI
-#       if: github.event.action == 'published'
-#       uses: pypa/gh-action-pypi-publish@master
-#       with:
-#         user: __token__
-#         password: ${{ secrets.pypi_password }}
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: apps-python-dist
+        path: helics_apps-pip/dist/*.tar.gz
 
   publish-helics_apps:
-    needs: [build-helics_apps]
+    needs: [build-helics_apps, build-helics_apps-sdist]
     runs-on: ubuntu-latest
     if: github.event.action == 'published' || endsWith(github.ref, 'master')
     steps:
