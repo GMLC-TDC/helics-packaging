@@ -1,4 +1,4 @@
-# HELICS Apps 
+# HELICS Apps
 [HELICS](https://github.com/GMLC-TDC/HELICS) is a cross-platform co-simulation framework that enables multiple
 simulation tools to exchange data and stay synchronized in time to create larger simulations. This is a set of
 binary wheels for macOS, Windows, and Linux for installing the collection of HELICS apps utilities. If you want
@@ -11,7 +11,7 @@ Regardless of your platform, you should probably upgrade pip with `python -m pip
 sure the right binary package is found. If you aren't on a supported platform, you will need to compile
 the HELICS apps from source or check if your system package manager has a copy of them.
 
-After upgrading pip, running `python -m pip install helics` should fetch a binary wheel if one is available for your platform.
+After upgrading pip, running `python -m pip install helics-apps` should fetch a binary wheel if one is available for your platform.
 
 ### Binary distributions
 This package provides pre-compiled binary wheels for the following operating systems
