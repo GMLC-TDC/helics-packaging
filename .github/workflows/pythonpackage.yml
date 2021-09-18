@@ -84,7 +84,7 @@ jobs:
   publish-helics_apps:
     needs: [build-helics_apps, build-helics_apps-sdist]
     runs-on: ubuntu-latest
-    if: github.event.action == 'published' || endsWith(github.ref, 'master')
+    if: github.event.action == 'published' || endsWith(github.ref, 'main')
     steps:
     - name: Get the built packages
       uses: actions/download-artifact@v1
@@ -93,7 +93,7 @@ jobs:
         path: dist
 
     - name: Publish package to TestPyPI
-      if: endsWith(github.ref, 'master')
+      if: endsWith(github.ref, 'main')
       uses: pypa/gh-action-pypi-publish@master
       with:
         user: __token__
