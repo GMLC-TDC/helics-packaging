@@ -6,6 +6,7 @@ jobs:
   update-mingw-package:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Checkout GMLC-TDC/MINGW-packages
       uses: actions/checkout@v2
       with:
@@ -22,7 +23,6 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-    - uses: actions/checkout@v2
     - name: Update HELICS mingw package
       run: |
         # Get HELICS version update info
