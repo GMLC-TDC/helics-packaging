@@ -43,4 +43,4 @@ jobs:
         git add PKGBUILD .
         git commit -m "helics: Update to ${HELICS_VERSION}"
         git push --set-upstream origin "helics-${HELICS_VERSION}"
-        gh pr create --base msys2/MINGW-packages:master --title "helics: Update to ${HELICS_VERSION}" --body "Update to the HELICS ${HELICS_VERSION} release"
+        gh pr create --repo msys2/MINGW-packages --title "helics: Update to ${HELICS_VERSION}" --body "Update to the HELICS ${HELICS_VERSION} release"
