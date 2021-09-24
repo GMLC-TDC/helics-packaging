@@ -1,0 +1,23 @@
+name: MINGW Package Update
+
+on: [workflow_dispatch]
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: 'GMLC-TDC/MINGW-packages'
+        token: ${{ secrets.HELICS_BOT_TOKEN }}
+        path: 'MINGW-packages'
+    - name: Sync MINGW-packages fork with upstream
+      working-directory: 'MINGW-packages'
+      run: |
+        gh auth login --with-token < ${{ secrets.HELICS_BOT_TOKEN }}
+        gh api repos/{owner}/{repo}/merge-upstream --field branch='{branch}' 
+    - name: Set git config for commits
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
