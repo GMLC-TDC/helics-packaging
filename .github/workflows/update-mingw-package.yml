@@ -14,7 +14,7 @@ jobs:
     - name: Sync MINGW-packages fork with upstream
       working-directory: 'MINGW-packages'
       run: |
-        gh auth login --with-token < ${{ secrets.HELICS_BOT_TOKEN }}
+        echo "${{ secrets.HELICS_BOT_TOKEN }}" | gh auth login --with-token
         gh api repos/{owner}/{repo}/merge-upstream --field branch='{branch}' 
     - name: Set git config for commits
       run: |
