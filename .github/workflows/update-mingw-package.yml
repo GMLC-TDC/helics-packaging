@@ -39,8 +39,8 @@ jobs:
         sed -i "/sha256sums=/c ${SHA256SUMS_LINE}" PKGBUILD
 
         # Commit the change and create a PR
-        git checkout -b "helics-${HELICS_VERISON}"
+        git checkout -b "helics-${HELICS_VERSION}"
         git add PKGBUILD .
         git commit -m "helics: Update to ${HELICS_VERSION}"
-        git push
+        git push --set-upstream origin "helics-${HELICS_VERSION}"
         gh pr create --title "helics: Update to ${HELICS_VERSION}" --body "Update to the HELICS ${HELICS_VERSION} release"
