@@ -3,10 +3,11 @@ name: MINGW Package Update
 on: [workflow_dispatch]
 
 jobs:
-  update-version:
+  update-mingw-package:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout GMLC-TDC/MINGW-packages
+      uses: actions/checkout@v2
       with:
         repository: 'GMLC-TDC/MINGW-packages'
         token: ${{ secrets.HELICS_BOT_TOKEN }}
@@ -21,3 +22,25 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+    - uses: actions/checkout@v2
+    - name: Update HELICS mingw package
+      run: |
+        # Get HELICS version update info
+        HELICS_VERSION="$(cat HELICS_VERSION)"
+        HELICS_SHA256SUMS=$(wget "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-v${HELICS_VERSION}-SHA-256.txt" -q -O -)
+        HELICS_TARNAME="Helics-v${HELICS_VERSION}-source.tar.gz"
+        HELICS_SHA256="$(echo "${HELICS_SHA256SUMS}" | grep -h "Helics-v${HELICS_VERSION}-source.tar.gz" | cut -d " " -f 1)"
+        
+        # Update lines in the package file
+        cd "MINGW-packages/mingw-w64-helics"
+        PKGVER_LINE="pkgver=${HELICS_VERSION}"
+        SHA256SUMS_LINE="sha256sums=('${HELICS_SHA256}')"
+        sed -i "/pkgver=/c ${PKGVER_LINE}" PKGBUILD
+        sed -i "/sha256sums=/c ${SHA256SUMS_LINE}" PKGBUILD
+
+        # Commit the change and create a PR
+        git checkout -b "helics-${HELICS_VERISON}"
+        git add PKGBUILD .
+        git commit -m "helics: Update to ${HELICS_VERSION}"
+        git push
+        gh pr create --title "helics: Update to ${HELICS_VERSION}" --body "Update to the HELICS ${HELICS_VERSION} release"
