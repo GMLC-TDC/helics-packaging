@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Checkout GMLC-TDC/Spack
+    - name: Checkout GMLC-TDC/spack
       uses: actions/checkout@v2
       with:
         repository: 'GMLC-TDC/spack'
@@ -42,4 +42,4 @@ jobs:
         git add var/spack/repos/builtin/packages/helics/
         git commit -m "helics: Add version ${HELICS_VERSION}"
         git push --set-upstream origin "helics-${HELICS_VERSION}"
-        gh pr create --repo GMLC-TDC/spack --title "helics: Add version ${HELICS_VERSION}" --body "Adds HELICS ${HELICS_VERSION} to the HELICS package versions"
+        gh pr create --repo spack/spack --title "helics: Add version ${HELICS_VERSION}" --body "Adds HELICS ${HELICS_VERSION} to the HELICS package versions"
