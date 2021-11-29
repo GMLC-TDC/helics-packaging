@@ -32,7 +32,7 @@ jobs:
         HELICS_SHA256="$(echo "${HELICS_SHA256SUMS}" | grep -h "Helics-v${HELICS_VERSION}-source.tar.gz" | cut -d " " -f 1)"
         
         # Update lines in the package file
-        cd "MINGW-packages/mingw-w64-helics"
+        cd "MINGW-packages/mingw-w64-helics" && git pull
         PKGVER_LINE="pkgver=${HELICS_VERSION}"
         SHA256SUMS_LINE="sha256sums=('${HELICS_SHA256}')"
         sed -i "/pkgver=/c ${PKGVER_LINE}" PKGBUILD
