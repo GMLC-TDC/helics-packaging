@@ -6,12 +6,6 @@ jobs:
   update-spack-package:
     runs-on: ubuntu-latest
     steps:
-    - name: Sync Spack fork with upstream
-      working-directory: 'spack'
-      run: |
-        echo "${{ secrets.HELICS_PACKAGING_TOKEN }}" | gh auth login --with-token
-        gh api repos/{owner}/{repo}/merge-upstream --field branch='{branch}' 
-
     - uses: actions/checkout@v2
     - name: Checkout GMLC-TDC/Spack
       uses: actions/checkout@v2
@@ -19,6 +13,11 @@ jobs:
         repository: 'GMLC-TDC/spack'
         token: ${{ secrets.HELICS_BOT_TOKEN }}
         path: 'spack'
+    - name: Sync Spack fork with upstream
+      working-directory: 'spack'
+      run: |
+        echo "${{ secrets.HELICS_PACKAGING_TOKEN }}" | gh auth login --with-token
+        gh api repos/{owner}/{repo}/merge-upstream --field branch='{branch}'
     - name: Set git config for commits
       run: |
         git config --global user.name "github-actions[bot]"
