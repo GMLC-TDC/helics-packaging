@@ -3,7 +3,7 @@
 HELICS_VERSION=$1
 
 # Get HELICS apps for macOS
-curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-${HELICS_VERSION}-macOS-x86_64.zip"
+curl -O -L "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-${HELICS_VERSION}-macOS-universal2.zip"
 unzip Helics-*.zip && rm Helics-*.zip && mv Helics-* helics || exit $?
 
 # Add a copy of HELICS binaries to the data folder
