@@ -9,5 +9,7 @@ pip install delocate wheel
 
 # Bundle external shared libraries into the wheels
 for whl in wheelhouse/*.whl; do
-  delocate-wheel -v "$whl" -w upload-wheelhouse
+  newwhl="${whl%%macos*.whl}macosx_10_14_universal2.macosx_10_14_x86_64.macosx_11_0_arm64.whl"
+  mv "$whl" "$newwhl"
+  delocate-wheel -v "$newwhl" -w upload-wheelhouse
 done
