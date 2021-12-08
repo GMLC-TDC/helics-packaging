@@ -34,7 +34,10 @@ DOWNLOAD_URL = "https://github.com/GMLC-TDC/HELICS/releases/download/v{version}/
 class HELICSBdistWheel(bdist_wheel):
     def get_tag(self):
         rv = super().get_tag()
-        return ("py2.py3", "none",) + rv[2:]
+        return (
+            "py2.py3",
+            "none",
+        ) + rv[2:]
 
 
 class HELICSCMakeBuild(build_ext):
@@ -78,7 +81,6 @@ class HELICSCMakeBuild(build_ext):
             extdir += os.path.sep
 
         cmake_args = [
-            "-DHELICS_DISABLE_GIT_OPERATIONS=OFF",
             "-DHELICS_ZMQ_SUBPROJECT=ON",
             "-DCMAKE_BUILD_TYPE=Release",
             "-DCMAKE_INSTALL_PREFIX={}".format(extdir),
