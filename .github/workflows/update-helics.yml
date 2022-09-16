@@ -13,6 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Read HELICS_VERSION
+      id: hver
+      run: echo "::set-output name=HELICS_VERSION::$(cat HELICS_VERSION)"
+    - name: Print HELICS_VERSION
+      run: echo "${{ steps.hver.outputs.HELICS_VERSION }}"
+    - uses: GMLC-TDC/pyhelics/.github/workflows/update-helics.yml@main
+      with:
+        version: ${{ steps.hver.outputs.HELICS_VERSION }}
+        dryrun: ${{ inputs.dryrun }}
     - name: Update pyhelics package
       env:
         GH_TOKEN: ${{ secrets.HELICS_PACKAGING_TOKEN }}
