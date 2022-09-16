@@ -23,7 +23,7 @@ jobs:
     needs: get-helics-version
     uses: GMLC-TDC/pyhelics/.github/workflows/update-helics.yml@main
     with:
-      version: ${{ steps.hver.outputs.HELICS_VERSION }}
+      version: ${{ needs.get-helics-version.outputs.ver }}
       dryrun: ${{ inputs.dryrun }}
 
   update-helics-version:
