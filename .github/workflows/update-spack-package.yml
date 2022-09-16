@@ -67,6 +67,7 @@ jobs:
         echo "::endgroup::"
 
         if [ "${{ inputs.dryrun }}" = "false" ]; then
+          echo "Pushing changes and opening a PR"
           git push --set-upstream origin "helics-${HELICS_VERSION}"
           gh pr create --repo spack/spack --title "helics: Add version ${HELICS_VERSION}" --body "Adds HELICS ${HELICS_VERSION} to the HELICS package versions"
         fi
