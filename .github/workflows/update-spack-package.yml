@@ -1,7 +1,13 @@
 name: Spack Package Update
 
-on: [workflow_dispatch]
-
+on:
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        description: 'Do a dry run of the package update process, without making the commit/PR'
+        required: false
+        type: boolean
+ 
 jobs:
   update-spack-package:
     runs-on: ubuntu-latest
@@ -32,6 +38,9 @@ jobs:
         cd "spack" && git pull
         spack_checksum_output=$(bin/spack checksum helics "$HELICS_VERSION")
         spack_new_version_line=$(echo ${spack_checksum_output} | sed 's/^.*version(/version(/')
+        echo "-----spack_checksum_output-----\n$spack_checksum_output"
+        echo "-----spack_new_version_line-----\n$spack_new_version_line"
+        echo "-----dryrun=${{ inputs.dryrun }}----"
 
         # Add the new version to the spack package file
         # Inserted below alias for main branch; 4 spaces ('\ ') to get matching indentation
