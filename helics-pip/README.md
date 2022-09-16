@@ -1,4 +1,7 @@
-# HELICS Python Interface
+# HELICS Python Interface (Archived)
+
+**This has been replaced by [pyhelics](https://github.com/GMLC-TDC/pyhelics)**
+
 [HELICS](https://github.com/GMLC-TDC/HELICS) is a cross-platform co-simulation framework that enables multiple
 simulation tools to exchange data and stay synchronized in time to create larger simulations. This is the Python
 wrapper for the C API provided by HELICS. If you're looking for the HELICS apps, see the [helics_apps](https://pypi.org/project/helics_apps/)
