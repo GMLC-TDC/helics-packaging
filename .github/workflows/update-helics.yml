@@ -21,7 +21,6 @@ jobs:
       run: echo "::set-output name=HELICS_VERSION::$(cat HELICS_VERSION)"
 
   update-spack:
-    name: Update Spack Package
     needs: get-helics-version
     uses: ./.github/workflows/update-spack-package.yml
     with:
@@ -29,7 +28,6 @@ jobs:
     secrets: inherit
 
   update-mingw:
-    name: Update MINGW Package
     needs: get-helics-version
     uses: ./.github/workflows/update-mingw-package.yml
     with:
