@@ -47,7 +47,7 @@ jobs:
 
         # Add the new version to the spack package file
         # Inserted below alias for main branch; 4 spaces ('\ ') to get matching indentation
-        sed -i "/^    version('master', branch='main', submodules=True)/a \ \ \ \ $spack_new_version_line" var/spack/repos/builtin/packages/helics/package.py
+        sed -i "/^    version(\"master\", branch=\"main\", submodules=True)/a \ \ \ \ $spack_new_version_line" var/spack/repos/builtin/packages/helics/package.py
 
         # Commit the change and create a PR
         git checkout -b "helics-${HELICS_VERSION}"
