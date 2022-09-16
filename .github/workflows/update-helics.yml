@@ -14,6 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Update pyhelics package
+      env:
+        GH_TOKEN: ${{ secrets.HELICS_PACKAGING_TOKEN }}
       run: |
         HELICS_VERSION="v$(cat HELICS_VERSION)"
         gh workflow run --repo GMLC-TDC/pyhelics update-helics.yml -f dryrun=${{ inputs.dryrun }} -f version=${HELICS_VERSION}
