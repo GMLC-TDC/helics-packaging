@@ -4,6 +4,7 @@ Assorted things for releasing HELICS in package repositories
 ## Workflows
 This has the workflows needed to begin the process of updating packages for new HELICS releases.
 
+- [Update HELICS Packages](https://github.com/GMLC-TDC/helics-packaging/actions/workflows/update-helics.yml): bump the HELICS version number for pyhelics and matHELICS (and eventually trigger the below package updates as well)
 - [Spack Package Update](https://github.com/GMLC-TDC/helics-packaging/actions/workflows/update-spack-package.yml): creates a PR to update the HELICS [spack package](https://github.com/spack/spack/blob/develop/var/spack/repos/builtin/packages/helics/package.py)
 - [MINGW Package Update](https://github.com/GMLC-TDC/helics-packaging/actions/workflows/update-mingw-package.yml): creates a PR to update the HELICS [MINGW package](https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-helics/PKGBUILD)
 
