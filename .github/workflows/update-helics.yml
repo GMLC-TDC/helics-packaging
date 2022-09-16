@@ -17,12 +17,12 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.HELICS_PACKAGING_TOKEN }}
       run: |
-        HELICS_VERSION="v$(cat HELICS_VERSION)"
+        HELICS_VERSION="$(cat HELICS_VERSION)"
         gh workflow run --repo GMLC-TDC/pyhelics update-helics.yml -f dryrun=${{ inputs.dryrun }} -f version=${HELICS_VERSION}
     - name: Update matHELICS package
       env:
         GH_TOKEN: ${{ secrets.HELICS_PACKAGING_TOKEN }}
       run: |
-        HELICS_VERSION="v$(cat HELICS_VERSION)"
+        HELICS_VERSION="$(cat HELICS_VERSION)"
         gh workflow run --repo GMLC-TDC/matHELICS update-helics.yml -f dryrun=${{ inputs.dryrun }} -f version=${HELICS_VERSION}
 
