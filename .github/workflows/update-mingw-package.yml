@@ -7,6 +7,11 @@ on:
         description: 'Do a dry run of the package update process, without making the commit/PR'
         required: false
         type: boolean
+  workflow_call:
+    inputs:
+      dryrun:
+        required: true
+        type: boolean
 
 jobs:
   update-mingw-package:
