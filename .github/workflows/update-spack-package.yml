@@ -12,11 +12,6 @@ on:
       dryrun:
         required: true
         type: boolean
-    secrets:
-      token:
-        required: true
-      HELICS_BOT_TOKEN:
-        required: true
 
 jobs:
   update-spack-package:
