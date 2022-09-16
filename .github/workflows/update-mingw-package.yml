@@ -1,6 +1,12 @@
 name: MINGW Package Update
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        description: 'Do a dry run of the package update process, without making the commit/PR'
+        required: false
+        type: boolean
 
 jobs:
   update-mingw-package:
@@ -32,15 +38,38 @@ jobs:
         HELICS_SHA256="$(echo "${HELICS_SHA256SUMS}" | grep -h "Helics-v${HELICS_VERSION}-source.tar.gz" | cut -d " " -f 1)"
         
         # Update lines in the package file
+        echo "::group::git pull"
         cd "MINGW-packages/mingw-w64-helics" && git pull
+        echo "::endgroup::"
         PKGVER_LINE="pkgver=${HELICS_VERSION}"
         SHA256SUMS_LINE="sha256sums=('${HELICS_SHA256}')"
+
+        echo "::group::pkgver line"
+        echo "$PKGVER_LINE"
+        echo "::endgroup::"
+        echo "::group::sha256sums line"
+        echo "$SHA256SUMS_LINE"
+        echo "::endgroup::"
+
         sed -i "/pkgver=/c ${PKGVER_LINE}" PKGBUILD
         sed -i "/sha256sums=/c ${SHA256SUMS_LINE}" PKGBUILD
 
         # Commit the change and create a PR
         git checkout -b "helics-${HELICS_VERSION}"
         git add PKGBUILD .
+
+        echo "::group::git diff --staged"
+        git diff --staged
+        echo "::endgroup::"
+
         git commit -m "helics: Update to ${HELICS_VERSION}"
-        git push --set-upstream origin "helics-${HELICS_VERSION}"
-        gh pr create --repo msys2/MINGW-packages --title "helics: Update to ${HELICS_VERSION}" --body "Update to the HELICS ${HELICS_VERSION} release"
+
+        echo "::group::git show"
+        git show
+        echo "::endgroup::"
+
+        if [ "${{ inputs.dryrun }}" = "false" ]; then
+          echo "Pushing changes and opening a PR"
+          git push --set-upstream origin "helics-${HELICS_VERSION}"
+          gh pr create --repo msys2/MINGW-packages --title "helics: Update to ${HELICS_VERSION}" --body "Update to the HELICS ${HELICS_VERSION} release"
+        fi
