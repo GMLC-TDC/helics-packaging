@@ -9,19 +9,30 @@ on:
         type: boolean
 
 jobs:
-  update-helics-version:
+  get-helics-version:
     runs-on: ubuntu-latest
+    outputs:
+      ver: ${{ steps.hver.outputs.HELICS_VERSION }}
     steps:
     - uses: actions/checkout@v2
     - name: Read HELICS_VERSION
       id: hver
       run: echo "::set-output name=HELICS_VERSION::$(cat HELICS_VERSION)"
+
+  update-pyhelics:
+    needs: get-helics-version
+    uses: GMLC-TDC/pyhelics/.github/workflows/update-helics.yml@main
+    with:
+      version: ${{ steps.hver.outputs.HELICS_VERSION }}
+      dryrun: ${{ inputs.dryrun }}
+
+  update-helics-version:
+    runs-on: ubuntu-latest
+    needs: get-helics-version
+    steps:
+    - uses: actions/checkout@v2
     - name: Print HELICS_VERSION
-      run: echo "${{ steps.hver.outputs.HELICS_VERSION }}"
-    - uses: GMLC-TDC/pyhelics/.github/workflows/update-helics.yml@main
-      with:
-        version: ${{ steps.hver.outputs.HELICS_VERSION }}
-        dryrun: ${{ inputs.dryrun }}
+      run: echo "${{ needs.get-helics-version.outputs.ver }}"
     - name: Update pyhelics package
       env:
         GH_TOKEN: ${{ secrets.HELICS_PACKAGING_TOKEN }}
