@@ -1,0 +1,20 @@
+name: Update HELICS Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        description: 'Do a dry run of the update process, without making the commit'
+        required: false
+        type: boolean
+
+jobs:
+  update-helics-version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update pyhelics package
+      run: |
+        HELICS_VERSION="v$(cat HELICS_VERSION)"
+        gh workflow run --repo GMLC-TDC/pyhelics update-helics.yml -f dryrun=${{ inputs.dryrun }} -f version=${HELICS_VERSION}
+
