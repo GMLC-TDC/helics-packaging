@@ -38,10 +38,12 @@ jobs:
         cd "spack" && git pull
         spack_checksum_output=$(bin/spack checksum helics "$HELICS_VERSION")
         spack_new_version_line=$(echo ${spack_checksum_output} | sed 's/^.*version(/version(/')
-        echo "-----spack_checksum_output-----"
+        echo "::group::spack checksum output"
         echo "$spack_checksum_output"
-        echo "-----spack_new_version_line-----"
+        echo "::endgroup::"
+        echo "::group::spack new version line"
         echo "$spack_new_version_line"
+        echo "::endgroup::"
 
         # Add the new version to the spack package file
         # Inserted below alias for main branch; 4 spaces ('\ ') to get matching indentation
@@ -50,11 +52,16 @@ jobs:
         # Commit the change and create a PR
         git checkout -b "helics-${HELICS_VERSION}"
         git add var/spack/repos/builtin/packages/helics/
+
+        echo "::group::git diff --staged"
+        git diff --staged
+        echo "::endgroup::"
+
         git commit -m "helics: Add version ${HELICS_VERSION}"
 
-        if [ "${{ inputs.dryrun }}" = "true" ]; then
-          git show
-        fi
+        echo "::group::git show"
+        git show
+        echo "::endgroup::"
 
         if [ "${{ inputs.dryrun }}" = "false" ]; then
           git push --set-upstream origin "helics-${HELICS_VERSION}"
