@@ -39,9 +39,9 @@ jobs:
             arch: win64
             plat_name: win_amd64
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: git fetch --prune --unshallow
-    - uses: actions/setup-python@v1
+    - uses: actions/setup-python@v4
       with:
         python-version: '3.x'
         architecture: 'x64'
@@ -51,7 +51,7 @@ jobs:
         source ./helics_apps-pip/packaging_scripts/setup-${{ runner.os  }}.sh "$(cat HELICS_VERSION)" "${{ matrix.arch }}"
         ./helics_apps-pip/packaging_scripts/build-${{ runner.os }}.sh "${{ matrix.plat_name }}"
         ./helics_apps-pip/packaging_scripts/repair-${{ runner.os }}.sh
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v3
       with:
         name: apps-python-dist
         path: upload-wheelhouse
@@ -59,10 +59,10 @@ jobs:
   build-helics_apps-sdist:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: git fetch --prune --unshallow
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: 3.8
 
@@ -76,7 +76,7 @@ jobs:
         python setup.py sdist
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: apps-python-dist
         path: helics_apps-pip/dist/*.tar.gz
@@ -94,7 +94,7 @@ jobs:
 
     - name: Publish package to TestPyPI
       if: endsWith(github.ref, 'main')
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.test_pypi_helics_apps_password }}
@@ -102,7 +102,7 @@ jobs:
 
     - name: Publish package to PyPI
       if: github.event.action == 'published'
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.pypi_helics_apps_password }}
