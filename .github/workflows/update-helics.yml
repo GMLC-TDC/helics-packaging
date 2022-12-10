@@ -34,6 +34,13 @@ jobs:
       dryrun: ${{ inputs.dryrun }}
     secrets: inherit
 
+  update-yggdrasil:
+    needs: get-helics-version
+    uses: ./.github/workflows/update-yggdrasil-package.yml
+    with:
+      dryrun: ${{ inputs.dryrun }}
+    secrets: inherit
+
   update-language-bindings:
     name: Trigger Language Bindings Version Update
     runs-on: ubuntu-latest
