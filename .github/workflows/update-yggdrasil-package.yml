@@ -57,12 +57,12 @@ jobs:
         echo "$SHA256SUMS_LINE"
         echo "::endgroup::"
 
-        sed -i "/HELICS_VERSION = /c ${PKGVER_LINE}" PKGBUILD
-        sed -i "/HELICS_SHA = /c ${SHA256SUMS_LINE}" PKGBUILD
+        sed -i "/HELICS_VERSION = /c ${PKGVER_LINE}" build_tarballs.jl
+        sed -i "/HELICS_SHA = /c ${SHA256SUMS_LINE}" build_tarballs.jl
 
         # Commit the change and create a PR
         git checkout -b "helics-${HELICS_VERSION}"
-        git add PKGBUILD .
+        git add build_tarballs.jl .
 
         echo "::group::git diff --staged"
         git diff --staged
