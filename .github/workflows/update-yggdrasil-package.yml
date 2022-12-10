@@ -1,0 +1,81 @@
+name: JuliaPackaging/Yggdrasil Package Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        description: 'Do a dry run of the package update process, without making the commit/PR'
+        required: false
+        type: boolean
+  workflow_call:
+    inputs:
+      dryrun:
+        required: true
+        type: boolean
+
+jobs:
+  update-yggdrasil-package:
+    name: Update Yggdrasil Package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Checkout GMLC-TDC/Yggdrasil
+      uses: actions/checkout@v3
+      with:
+        repository: 'GMLC-TDC/Yggdrasil'
+        token: ${{ secrets.HELICS_BOT_TOKEN }}
+        path: 'Yggdrasil'
+    - name: Sync Yggdrasil fork with upstream
+      working-directory: 'Yggdrasil'
+      run: |
+        echo "${{ secrets.HELICS_PACKAGING_TOKEN }}" | gh auth login --with-token
+        gh api repos/{owner}/{repo}/merge-upstream --field branch='{branch}'
+    - name: Set git config for commits
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Update HELICS Yggdrasil package
+      run: |
+        # Get HELICS version update info
+        HELICS_VERSION="$(cat HELICS_VERSION)"
+        HELICS_SHA256SUMS=$(wget "https://github.com/GMLC-TDC/HELICS/releases/download/v${HELICS_VERSION}/Helics-v${HELICS_VERSION}-SHA-256.txt" -q -O -)
+        HELICS_TARNAME="Helics-v${HELICS_VERSION}-source.tar.gz"
+        HELICS_SHA256="$(echo "${HELICS_SHA256SUMS}" | grep -h "Helics-v${HELICS_VERSION}-source.tar.gz" | cut -d " " -f 1)"
+        
+        # Update lines in the package file
+        echo "::group::git pull"
+        cd "Yggdrasil/H/HELICS" && git pull
+        echo "::endgroup::"
+        PKGVER_LINE="HELICS_VERSION = v\"${HELICS_VERSION}\""
+        SHA256SUMS_LINE="HELICS_SHA = \"${HELICS_SHA256}\""
+
+        echo "::group::pkgver line"
+        echo "$PKGVER_LINE"
+        echo "::endgroup::"
+        echo "::group::sha256sums line"
+        echo "$SHA256SUMS_LINE"
+        echo "::endgroup::"
+
+        sed -i "/HELICS_VERSION = /c ${PKGVER_LINE}" build_tarballs.jl
+        sed -i "/HELICS_SHA = /c ${SHA256SUMS_LINE}" build_tarballs.jl
+
+        # Commit the change and create a PR
+        git checkout -b "helics-${HELICS_VERSION}"
+        git add build_tarballs.jl .
+
+        echo "::group::git diff --staged"
+        git diff --staged
+        echo "::endgroup::"
+
+        git commit -m "[HELICS] update to v${HELICS_VERSION}"
+
+        echo "::group::git show"
+        git show
+        echo "::endgroup::"
+
+        if [ "${{ inputs.dryrun }}" = "false" ]; then
+          echo "Pushing changes and opening a PR"
+          git push --set-upstream origin "helics-${HELICS_VERSION}"
+          gh pr create --repo JuliaPackaging/Yggdrasil --title "[HELICS] update to v${HELICS_VERSION}" --body "Update to the HELICS ${HELICS_VERSION} release"
+        fi
