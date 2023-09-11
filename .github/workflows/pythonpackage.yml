@@ -39,7 +39,7 @@ jobs:
             arch: win64
             plat_name: win_amd64
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - run: git fetch --prune --unshallow
     - uses: actions/setup-python@v4
       with:
@@ -59,7 +59,7 @@ jobs:
   build-helics_apps-sdist:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - run: git fetch --prune --unshallow
     - name: Set up Python
       uses: actions/setup-python@v4

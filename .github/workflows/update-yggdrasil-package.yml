@@ -18,9 +18,9 @@ jobs:
     name: Update Yggdrasil Package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Checkout GMLC-TDC/Yggdrasil
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: 'GMLC-TDC/Yggdrasil'
         token: ${{ secrets.HELICS_BOT_TOKEN }}

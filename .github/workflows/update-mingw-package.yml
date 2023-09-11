@@ -18,9 +18,9 @@ jobs:
     name: Update MINGW Package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Checkout GMLC-TDC/MINGW-packages
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: 'GMLC-TDC/MINGW-packages'
         token: ${{ secrets.HELICS_BOT_TOKEN }}
