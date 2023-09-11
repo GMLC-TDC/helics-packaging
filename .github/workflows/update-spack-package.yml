@@ -18,9 +18,9 @@ jobs:
     name: Update Spack Package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Checkout GMLC-TDC/spack
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: 'GMLC-TDC/spack'
         token: ${{ secrets.HELICS_BOT_TOKEN }}

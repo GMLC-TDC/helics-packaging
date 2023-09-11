@@ -15,7 +15,7 @@ jobs:
     outputs:
       ver: ${{ steps.hver.outputs.HELICS_VERSION }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Read HELICS_VERSION
       id: hver
       run: echo "HELICS_VERSION=$(cat HELICS_VERSION)" >> $GITHUB_OUTPUT

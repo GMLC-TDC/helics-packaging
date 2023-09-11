@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.action == 'helics-version-update'
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Update the HELICS_VERSION file to ${{ github.event.client_payload.version }}
       run: echo "${{ github.event.client_payload.version }}" > HELICS_VERSION
     - name: Commit updated HELICS_VERSION file
