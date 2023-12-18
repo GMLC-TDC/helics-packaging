@@ -51,7 +51,7 @@ jobs:
         source ./helics_apps-pip/packaging_scripts/setup-${{ runner.os  }}.sh "$(cat HELICS_VERSION)" "${{ matrix.arch }}"
         ./helics_apps-pip/packaging_scripts/build-${{ runner.os }}.sh "${{ matrix.plat_name }}"
         ./helics_apps-pip/packaging_scripts/repair-${{ runner.os }}.sh
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: apps-python-dist
         path: upload-wheelhouse
@@ -76,7 +76,7 @@ jobs:
         python setup.py sdist
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: apps-python-dist
         path: helics_apps-pip/dist/*.tar.gz
