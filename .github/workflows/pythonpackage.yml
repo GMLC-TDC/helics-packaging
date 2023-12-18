@@ -87,7 +87,7 @@ jobs:
     if: github.event.action == 'published' || endsWith(github.ref, 'main')
     steps:
     - name: Get the built packages
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: apps-python-dist
         path: dist
