@@ -1,19 +1,32 @@
 name: HELICS Version Update
 
-on: [repository_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'HELICS version number (without leading `v` prefix)'
+        required: true
+        type: string
+      dryrun:
+        description: 'Do a dry run of the update process, without making the commit'
+        required: false
+        type: boolean
 
 jobs:
   update-version:
     runs-on: ubuntu-latest
-    if: github.event.action == 'helics-version-update'
     steps:
     - uses: actions/checkout@v4
-    - name: Update the HELICS_VERSION file to ${{ github.event.client_payload.version }}
-      run: echo "${{ github.event.client_payload.version }}" > HELICS_VERSION
+    - name: Update the HELICS_VERSION file to ${{ inputs.version }}
+      run: echo "${{ inputs.version }}" > HELICS_VERSION
     - name: Commit updated HELICS_VERSION file
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add HELICS_VERSION && git commit -m "Update HELICS version to ${{ github.event.client_payload.version }}"
+        git add HELICS_VERSION && git commit -m "Update HELICS version to ${{ inputs.version }}"
     - name: Push updated HELICS_VERSION file
-      run: git push
+      run: |
+        if [ "${{ inputs.dryrun }}" = "false" ]; then
+          echo "Pushing changes"
+          git push
+        fi
