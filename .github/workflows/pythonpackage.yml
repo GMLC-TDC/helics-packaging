@@ -78,18 +78,23 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: apps-python-dist
+        name: apps-python-sdist
         path: helics_apps-pip/dist/*.tar.gz
 
   publish-helics_apps:
     needs: [build-helics_apps, build-helics_apps-sdist]
     runs-on: ubuntu-latest
     if: github.event.action == 'published' || endsWith(github.ref, 'main')
+    environment:
+      name: pypi
+      url: https://pypi.org/p/helics-apps
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
     - name: Get the built packages
       uses: actions/download-artifact@v3
       with:
-        name: apps-python-dist
+        merge-multiple: true
         path: dist
 
     - name: Publish package to TestPyPI
@@ -103,6 +108,3 @@ jobs:
     - name: Publish package to PyPI
       if: github.event.action == 'published'
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.pypi_helics_apps_password }}
