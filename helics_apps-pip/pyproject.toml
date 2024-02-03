@@ -56,7 +56,7 @@ test-command = [
 [tool.scikit-build]
 minimum-version = "0.8"
 cmake.version = ">=3.15"
-build-dir = "build/{wheel_tag}"
+#build-dir = "build/{wheel_tag}"  # this can be used to speed up builds while testing
 wheel.install-dir = "helics_apps/data"
 wheel.py-api = "py2.py3"
 wheel.expand-macos-universal-tags = true
