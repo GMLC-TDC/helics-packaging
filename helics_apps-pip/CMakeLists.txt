@@ -36,9 +36,9 @@ if(DEFINED ENV{CIBUILDWHEEL} AND HELICS_DOWNLOAD_URL AND SKBUILD_STATE STREQUAL 
             USE_SOURCE_PERMISSIONS
         )
     endif()
-    # Linux needs libzmq (libhelics isn't used); previously we added lib64 to LD_LIBRARY_PATH so auditwheel can fix up the binary wheel
+    # Linux (and macOS?) needs libzmq (libhelics isn't used); previously we added lib64 to LD_LIBRARY_PATH so auditwheel can fix up the binary wheel
     # that is a bit trickier due to temporary folder skbuild/CMake uses, so instead let's include it this way...
-    if(LINUX)
+    if(LINUX OR APPLE)
         if(EXISTS ${helics-bin_SOURCE_DIR}/lib)
             install(
                 DIRECTORY ${helics-bin_SOURCE_DIR}/lib/
