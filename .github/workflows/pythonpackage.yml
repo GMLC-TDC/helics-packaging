@@ -53,13 +53,13 @@ jobs:
     #     uses: docker/setup-qemu-action@v3.0.0
     #     if: runner.os == 'Linux' && matrix.use_qemu
     - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16.2
-        env:
-          CIBW_ARCHS: "${{ matrix.arch }}"
-          CIBW_ARCHS_MACOS: "universal2"
-          CIBW_BUILD: "cp39-${{ matrix.build }}*"
-          CIBW_BUILD_VERBOSITY: 3
-          TEST_ENV_VAR: "A VALUE!!!"
+      uses: pypa/cibuildwheel@v2.16.2
+      env:
+        CIBW_ARCHS: "${{ matrix.arch }}"
+        CIBW_ARCHS_MACOS: "universal2"
+        CIBW_BUILD: "cp39-${{ matrix.build }}*"
+        CIBW_BUILD_VERBOSITY: 3
+        TEST_ENV_VAR: "A VALUE!!!"
     - uses: actions/upload-artifact@v4
       with:
         name: apps-python-dist-${{matrix.artifact_suffix}}
