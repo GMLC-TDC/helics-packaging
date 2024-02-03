@@ -2,6 +2,11 @@ name: Build Python Packages
 
 on:
   workflow_dispatch:
+    inputs:
+      use_qemu:
+        description: 'Use qemu to build linux aarch64, ppc64le & s390x'
+        required: false
+        default: false
   workflow_run:
     workflows: ["HELICS Version Update"]
     branches: [main]
@@ -23,6 +28,7 @@ jobs:
     name: Build ${{ matrix.build }}${{ matrix.arch }} wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-20.04
@@ -49,9 +55,9 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # ensure history is present for automatic versioning
-    # - name: Set up QEMU
-    #     uses: docker/setup-qemu-action@v3.0.0
-    #     if: runner.os == 'Linux' && matrix.use_qemu
+    - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.0.0
+        if: runner.os == 'Linux' && matrix.use_qemu
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.16.5
       with:
