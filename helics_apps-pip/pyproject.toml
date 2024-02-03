@@ -48,6 +48,11 @@ helics_broker_server = "helics_apps:helics_broker_server"
 helics_player = "helics_apps:helics_player"
 helics_recorder = "helics_apps:helics_recorder"
 
+[tool.cibuildwheel]
+test-command = [
+  "helics_app --version",
+]
+
 [tool.scikit-build]
 minimum-version = "0.8"
 cmake.version = ">=3.15"

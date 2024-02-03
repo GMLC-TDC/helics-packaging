@@ -90,8 +90,20 @@ jobs:
         name: apps-python-sdist
         path: helics_apps-pip/dist/*.tar.gz
 
-  publish-helics_apps:
+
+  check_helics_appcs-dist:
+    name: Check helics_apps Python packages
     needs: [build-helics_apps, build-helics_apps-sdist]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - run: pipx run twine check --strict dist/*
+
+  publish-helics_apps:
+    needs: [build-helics_apps, build-helics_apps-sdist, check_helics_appcs-dist]
     runs-on: ubuntu-latest
     if: github.event.action == 'published' || endsWith(github.ref, 'main')
     environment:
