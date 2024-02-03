@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15...3.26)
 project(HELICS LANGUAGES CXX) # Must be "HELICS" due to its CMake files requiring CMAKE_PROJECT_NAME == PROJECT_NAME in order to build app executables
 
 message(STATUS "--------------------")
+message(STATUS "SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P}") # if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+message(STATUS "CMAKE_GENERATOR ${CMAKE_GENERATOR}")
 message(STATUS "INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "SYSTEM ${CMAKE_SYSTEM}")
 message(STATUS "SYSTEM_PROCESSOR ${CMAKE_SYSTEM_PROCESSOR}")

@@ -64,7 +64,7 @@ jobs:
         package-dir: helics_apps-pip
       env:
         CIBW_ARCHS: "${{ matrix.arch }}"
-        CIBW_ARCHS_MACOS: "universal2"
+        CIBW_ARCHS_MACOS: "x86_64 universal2 arm64"
         CIBW_BUILD: "cp39-${{ matrix.build }}*"
         CIBW_BUILD_VERBOSITY: 3
         TEST_ENV_VAR: "A VALUE!!!"
