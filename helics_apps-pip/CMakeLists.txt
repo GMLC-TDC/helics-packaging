@@ -28,6 +28,7 @@ if(DEFINED ENV{CIBUILDWHEEL} AND HELICS_DOWNLOAD_URL AND SKBUILD_STATE STREQUAL 
     )
     FetchContent_MakeAvailable(helics-bin)
     # Only include the things we actually need for the helics_apps in the wheels to minimize overall file size
+    include(GNUInstallDirs) # used so default BIN/LIB subfolder names will match HELICS
     if(EXISTS ${helics-bin_SOURCE_DIR}/bin)
         install(
             DIRECTORY ${helics-bin_SOURCE_DIR}/bin/
