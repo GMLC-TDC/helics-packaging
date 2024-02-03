@@ -60,6 +60,6 @@ sdist.include = ["helics_apps/_version.py"]
 sdist.cmake = true
 
 [tool.setuptools_scm]  # Section required
-version_scheme = "no-guess-dev"  # Works well with SKBUILD version having postN and devM tags dropped
+version_scheme = "no-guess-dev"  # Works well with SKBUILD version having postN and devM tags dropped, good for getting current HELICS version to download
 root = ".."
 version_file = "helics_apps/_version.py"
