@@ -27,14 +27,39 @@ if(DEFINED ENV{CIBUILDWHEEL} AND HELICS_DOWNLOAD_URL AND SKBUILD_STATE STREQUAL 
         URL ${HELICS_DOWNLOAD_URL}
     )
     FetchContent_MakeAvailable(helics-bin)
+    # Only include the things we actually need for the helics_apps in the wheels to minimize overall file size
     if(EXISTS ${helics-bin_SOURCE_DIR}/bin)
-        install(DIRECTORY ${helics-bin_SOURCE_DIR}/bin DESTINATION . USE_SOURCE_PERMISSIONS)
+        install(
+            DIRECTORY ${helics-bin_SOURCE_DIR}/bin/
+            TYPE BIN
+            USE_SOURCE_PERMISSIONS
+        )
     endif()
-    if(EXISTS ${helics-bin_SOURCE_DIR}/lib)
-        install(DIRECTORY ${helics-bin_SOURCE_DIR}/lib DESTINATION . USE_SOURCE_PERMISSIONS)
-    endif()
-    if(EXISTS ${helics-bin_SOURCE_DIR}/lib64)
-        install(DIRECTORY ${helics-bin_SOURCE_DIR}/lib64 DESTINATION . USE_SOURCE_PERMISSIONS)
+    # Linux needs libzmq (libhelics isn't used); previously we added lib64 to LD_LIBRARY_PATH so auditwheel can fix up the binary wheel
+    # that is a bit trickier due to temporary folder skbuild/CMake uses, so instead let's include it this way...
+    if(LINUX OR APPLE)
+        if(EXISTS ${helics-bin_SOURCE_DIR}/lib)
+            install(
+                DIRECTORY ${helics-bin_SOURCE_DIR}/lib/
+                TYPE LIB
+                USE_SOURCE_PERMISSIONS
+                PATTERN cmake EXCLUDE
+                PATTERN pkgconfig EXCLUDE
+                PATTERN libhelics* EXCLUDE
+                PATTERN libzmq*
+            )
+        endif()
+        if(EXISTS ${helics-bin_SOURCE_DIR}/lib64)
+            install(
+                DIRECTORY ${helics-bin_SOURCE_DIR}/lib64/
+                TYPE LIB
+                USE_SOURCE_PERMISSIONS
+                PATTERN cmake EXCLUDE
+                PATTERN pkgconfig EXCLUDE
+                PATTERN libhelics* EXCLUDE
+                PATTERN libzmq*
+            )
+        endif()
     endif()
 
     # If we made a wheel from pre-built HELICS binaries, exit early!
