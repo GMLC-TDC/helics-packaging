@@ -1,0 +1,64 @@
+[build-system]
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "helics_apps"
+authors = [
+    {name = "GMLC-TDC", email = "helicsdevelopers@helics.org"},
+]
+description = "Hierarchical Engine for Large-scale Infrastructure Co-Simulation (HELICS)"
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["helics", "co-simulation"]
+license = {text = "BSD License"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Programming Language :: C",
+    "Programming Language :: C++",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Utilities",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://helics.org/"
+Download = "https://github.com/GMLC-TDC/HELICS/releases"
+Discussions = "https://github.com/GMLC-TDC/HELICS/discussions"
+Documentation = "https://docs.helics.org/en/latest/"
+"Issue Tracker" = "https://github.com/GMLC-TDC/HELICS/issues"
+"Source Code" = "https://github.com/GMLC-TDC/HELICS"
+
+[project.scripts]
+helics_app = "helics_apps:helics_app"
+helics_broker = "helics_apps:helics_broker"
+helics_broker_server = "helics_apps:helics_broker_server"
+helics_player = "helics_apps:helics_player"
+helics_recorder = "helics_apps:helics_recorder"
+
+[tool.scikit-build]
+minimum-version = "0.8"
+cmake.version = ">=3.15"
+build-dir = "build/{wheel_tag}"
+wheel.install-dir = "helics_apps/data"
+wheel.py-api = "py2.py3"
+metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
+sdist.include = ["helics_apps/_version.py"]
+sdist.cmake = true
+
+[tool.setuptools_scm]  # Section required
+version_scheme = "no-guess-dev"  # Works well with SKBUILD version having postN and devM tags dropped
+root = ".."
+version_file = "helics_apps/_version.py"

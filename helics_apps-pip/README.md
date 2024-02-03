@@ -21,7 +21,8 @@ This package provides pre-compiled binary wheels for the following operating sys
 * Windows 32/64-bit
 
 ### Source distributions
-Unfortunately, there is no source distribution for this package at this time since that requires compiling HELICS from source.
+An attempt has been made at providing a source distribution that will compiled HELICS from source. Although minimal
+support can be provided (e.g. you will need to troubleshoot issues yourself), PRs fixing issues are welcome.
 
 ## Release
 HELICS is distributed under the terms of the BSD-3 clause license. All new

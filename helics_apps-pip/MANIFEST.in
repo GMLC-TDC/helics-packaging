@@ -1,4 +1,0 @@
-graft helics_apps/data
-
-include versioneer.py
-include helics_apps/_version.py

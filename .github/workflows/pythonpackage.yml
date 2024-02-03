@@ -20,60 +20,62 @@ on:
 jobs:
   build-helics_apps:
     # No container needed, since the package is version agnostic
+    name: Build ${{ matrix.build }}${{ matrix.arch }} wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        id: [linux, macos, win32, win64]
         include:
-          - id: linux
-            os: ubuntu-latest
-          - id: macos
-            os: macos-latest
-            plat_name: macosx_10_9_intel
-          - id: win32
-            os: windows-latest
-            arch: win32
-            plat_name: win32
-          - id: win64
-            os: windows-latest
-            arch: win64
-            plat_name: win_amd64
+          - os: ubuntu-20.04
+            arch: "x86_64"
+            build: "manylinux_"
+            artifact_suffix: "manylinux_x86_64"
+            use_qemu: false
+          - os: windows-2019
+            arch: "AMD64"
+            build: ""
+            artifact_suffix: "windows_x86_64"
+            use_qemu: false
+          - os: windows-2019
+            arch: "x86"
+            build: ""
+            artifact_suffix: "windows_x86"
+            use_qemu: false
+          - os: macos-14
+            arch: "universal2"
+            build: ""
+            artifact_suffix: "macos"
+            use_qemu: false
     steps:
     - uses: actions/checkout@v4
-    - run: git fetch --prune --unshallow
-    - uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
-        architecture: 'x64'
-    - name: Create wheel
-      shell: bash
-      run: |
-        source ./helics_apps-pip/packaging_scripts/setup-${{ runner.os  }}.sh "$(cat HELICS_VERSION)" "${{ matrix.arch }}"
-        ./helics_apps-pip/packaging_scripts/build-${{ runner.os }}.sh "${{ matrix.plat_name }}"
-        ./helics_apps-pip/packaging_scripts/repair-${{ runner.os }}.sh
+        fetch-depth: 0 # ensure history is present for automatic versioning
+    # - name: Set up QEMU
+    #     uses: docker/setup-qemu-action@v3.0.0
+    #     if: runner.os == 'Linux' && matrix.use_qemu
+    - name: Build wheels
+        uses: pypa/cibuildwheel@v2.16.2
+        env:
+          CIBW_ARCHS: "${{ matrix.arch }}"
+          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_BUILD: "cp39-${{ matrix.build }}*"
+          CIBW_BUILD_VERBOSITY: 3
+          TEST_ENV_VAR: "A VALUE!!!"
     - uses: actions/upload-artifact@v4
       with:
-        name: apps-python-dist
-        path: upload-wheelhouse
+        name: apps-python-dist-${{matrix.artifact_suffix}}
+        path: helics_apps-pip/wheelhouse/*.whl
 
   build-helics_apps-sdist:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: git fetch --prune --unshallow
-    - name: Set up Python
-      uses: actions/setup-python@v4
       with:
-        python-version: 3.8
-
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip install wheel setuptools cffi
+        fetch-depth: 0  # for setuptools_scm to find tags
 
     - name: Build sdist
       run: |
         cd ./helics_apps-pip
-        python setup.py sdist
+        pipx run build --sdist
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -92,7 +94,7 @@ jobs:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
     - name: Get the built packages
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         merge-multiple: true
         path: dist
