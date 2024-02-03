@@ -71,7 +71,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: apps-python-dist-${{matrix.artifact_suffix}}
-        path: helics_apps-pip/wheelhouse/*.whl
+        path: wheelhouse/*.whl
 
   build-helics_apps-sdist:
     runs-on: ubuntu-latest
@@ -81,9 +81,8 @@ jobs:
         fetch-depth: 0  # for setuptools_scm to find tags
 
     - name: Build sdist
-      run: |
-        cd ./helics_apps-pip
-        pipx run build --sdist
+      working-directory: helics_apps-pip
+      run: pipx run build --sdist
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
