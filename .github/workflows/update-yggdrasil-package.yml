@@ -23,13 +23,13 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: 'GMLC-TDC/Yggdrasil'
-        token: ${{ secrets.HELICS_BOT_TOKEN }}
+        token: ${{ secrets.HELICS_PACKAGING_TOKEN }}
         path: 'Yggdrasil'
     - name: Sync Yggdrasil fork with upstream
       working-directory: 'Yggdrasil'
-      run: |
-        echo "${{ secrets.HELICS_PACKAGING_TOKEN }}" | gh auth login --with-token
-        gh api repos/{owner}/{repo}/merge-upstream --field branch='{branch}'
+      env:
+        GH_TOKEN: ${{ secrets.HELICS_PACKAGING_TOKEN }}
+      run: gh api repos/{owner}/{repo}/merge-upstream --field branch='{branch}'
     - name: Set git config for commits
       run: |
         git config --global user.name "github-actions[bot]"
