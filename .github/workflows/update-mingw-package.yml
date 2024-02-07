@@ -36,6 +36,8 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
     - name: Update HELICS mingw package
+      env:
+        GH_TOKEN: ${{ secrets.HELICS_PACKAGING_TOKEN }}
       run: |
         # Get HELICS version update info
         HELICS_VERSION="$(cat HELICS_VERSION)"
