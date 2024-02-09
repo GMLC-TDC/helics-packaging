@@ -91,7 +91,7 @@ jobs:
         path: helics_apps-pip/dist/*.tar.gz
 
 
-  check_helics_appcs-dist:
+  check_helics_apps-dist:
     name: Check helics_apps Python packages
     needs: [build-helics_apps, build-helics_apps-sdist]
     runs-on: ubuntu-20.04
@@ -103,7 +103,7 @@ jobs:
       - run: pipx run twine check --strict dist/*
 
   publish-helics_apps:
-    needs: [build-helics_apps, build-helics_apps-sdist, check_helics_appcs-dist]
+    needs: [build-helics_apps, build-helics_apps-sdist, check_helics_apps-dist]
     runs-on: ubuntu-latest
     if: github.event.action == 'published' || endsWith(github.ref, 'main')
     environment:
