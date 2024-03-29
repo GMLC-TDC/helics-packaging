@@ -30,3 +30,7 @@ def helics_player():
 def helics_recorder():
     raise SystemExit(_program('helics_recorder', sys.argv[1:]))
 
+def helics_connector():
+    raise SystemExit(_program('helics_connector', sys.argv[1:]))
+
+
