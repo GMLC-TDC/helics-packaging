@@ -12,12 +12,13 @@ This has the workflows needed to begin the process of updating packages for new 
 
 Errors running this workflows are likely either a temporary network connectivity issue, regex that needs updating, issue sync'ing the GMLC-TDC mirror of an upstream package repository, or a change to the GitHub API for creating PRs.
 
-## helics_apps-pip
+## helics_apps-pip (no longer used)
+This previously built Python wheels that had the HELICS apps (helics_app, helics_broker, etc), but those are now included as part of [pyhelics](https://github.com/GMLC-TDC/pyhelics) and are obtained when doing a `pip install helics`.
+ 
 A Python pip package with the HELICS apps (helics_app, helics_broker, etc) - [PyPI](https://pypi.org/project/helics-apps), [TestPyPI](https://test.pypi.org/project/helics-apps)
-
-Updating this package on PyPI is triggered by [creating a new release in GMLC-TDC/helics-packaging](https://github.com/GMLC-TDC/helics-packaging/releases/new)
 
 ## helics-pip (no longer used)
 This previously built the Python wheels for PyPI using swig. It has been replaced by [pyhelics](https://github.com/GMLC-TDC/pyhelics)
+
 A Python pip package with the HELICS python interface - [PyPI](https://pypi.org/project/helics), [TestPyPI](https://test.pypi.org/project/helics)
 
