@@ -1,24 +1,25 @@
 [build-system]
-requires = ["scikit-build-core"]
-build-backend = "scikit_build_core.build"
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "helics_apps"
+version = "3.7.0" # final release version, archived
+description = "Meta-package to install helics (ARCHIVED, pip install helics instead)"
 authors = [
     {name = "GMLC-TDC", email = "helicsdevelopers@helics.org"},
 ]
-description = "Hierarchical Engine for Large-scale Infrastructure Co-Simulation (HELICS)"
 readme = "README.md"
 requires-python = ">=3.7"
 keywords = ["helics", "co-simulation"]
-license = {text = "BSD License"}
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 7 - Inactive",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
@@ -31,7 +32,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Utilities",
 ]
-dynamic = ["version"]
+dependencies = ["helics>=3.7.0"]
 
 [project.urls]
 Homepage = "https://helics.org/"
@@ -40,33 +41,3 @@ Discussions = "https://github.com/GMLC-TDC/HELICS/discussions"
 Documentation = "https://docs.helics.org/en/latest/"
 "Issue Tracker" = "https://github.com/GMLC-TDC/HELICS/issues"
 "Source Code" = "https://github.com/GMLC-TDC/HELICS"
-
-[project.scripts]
-helics_app = "helics_apps:helics_app"
-helics_broker = "helics_apps:helics_broker"
-helics_broker_server = "helics_apps:helics_broker_server"
-helics_player = "helics_apps:helics_player"
-helics_recorder = "helics_apps:helics_recorder"
-helics_connector = "helics_apps:helics_connector"
-
-[tool.cibuildwheel]
-test-command = [
-  "helics_app --version",
-]
-
-[tool.scikit-build]
-minimum-version = "0.8"
-cmake.version = ">=3.15"
-#build-dir = "build/{wheel_tag}"  # this can be used to speed up builds while testing
-wheel.install-dir = "helics_apps/data"
-wheel.py-api = "py2.py3"
-wheel.expand-macos-universal-tags = true
-metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
-sdist.include = ["helics_apps/_version.py"]
-sdist.exclude = ["build"]
-sdist.cmake = true
-
-[tool.setuptools_scm]  # Section required
-version_scheme = "no-guess-dev"  # Works well with SKBUILD version having postN and devM tags dropped, good for getting current HELICS version to download
-root = ".."
-version_file = "helics_apps/_version.py"

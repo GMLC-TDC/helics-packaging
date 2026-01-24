@@ -1,4 +1,7 @@
-# HELICS Apps
+# HELICS Apps (Archived)
+
+**This has been replaced by [pyhelics](https://github.com/GMLC-TDC/pyhelics) - the final version of this package uploaded has been changed to be equivalent to `pip install helics`**
+
 [HELICS](https://github.com/GMLC-TDC/HELICS) is a cross-platform co-simulation framework that enables multiple
 simulation tools to exchange data and stay synchronized in time to create larger simulations. This is a set of
 binary wheels for macOS, Windows, and Linux for installing the collection of HELICS apps utilities. If you want
